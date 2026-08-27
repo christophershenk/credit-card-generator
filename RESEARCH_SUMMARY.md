@@ -69,7 +69,7 @@ https://www.vccgenerator.org/
 ## 5. 已确定的产品取舍
 
 - 第一版优先 BetterBugs 式“直接生成、直接看卡片”，不在生成前增加 Output Format。
-- 不加 TestMu/VCC 的地址、银行、国家、BIN、金额、PIN、高级输出和 API。
+- 不加 TestMu/VCC 的地址、银行、国家、BIN、金额、PIN、高级模式和 API；仅保留批量结果的 `Copy JSON` 与 `Download CSV`。
 - 产品 H1 可为 `Credit Card Generator`；说明必须诚实标注 synthetic test data / development / QA / demos / form validation。
 - 不把 `fake` 作为主要产品卖点，也不写“可绕过试用”“无需真实卡”“可用于真实支付”等承诺。
 - 第一版无需 AI、Token、第三方 API、账号、数据库、支付或后台。
@@ -79,5 +79,4 @@ https://www.vccgenerator.org/
 - 精确词在北美和欧洲的长期搜索量、地区分布及 SERP 前十实际竞争。
 - 非开发者搜索者的比例、他们停留后希望得到什么、是否会回访。
 - 上线后是否有稳定且合规的广告流量价值。
-- 是否值得在后续把 JSON/CSV 作为折叠的“开发者导出”功能。
-
+- JSON/CSV 的真实使用率，以及是否值得再增加 XML/TXT 等格式。

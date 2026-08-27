@@ -12,9 +12,13 @@ const elements = {
     append(element) { this.children.push(element); },
   },
   "#feedback": { textContent: "" },
+  "#batch-actions": { hidden: true },
+  "#copy-json": { textContent: "Copy JSON", addEventListener(type, handler) { handlers.copyJson = handler; } },
+  "#download-csv": { addEventListener(type, handler) { handlers.downloadCsv = handler; } },
 };
 
 let copiedNumber = "";
+let downloadedFile = {};
 const context = {
   console,
   Date,
@@ -23,9 +27,15 @@ const context = {
   String,
   Array,
   Promise,
+  Blob,
+  URL: {
+    createObjectURL(blob) { downloadedFile.blob = blob; return "blob:test-download"; },
+    revokeObjectURL() {},
+  },
   setTimeout() {},
   navigator: { clipboard: { writeText(value) { copiedNumber = value; return Promise.resolve(); } } },
   document: {
+    body: { append() {} },
     querySelector(selector) { return elements[selector]; },
     createElement(tag) {
       return {
@@ -33,8 +43,14 @@ const context = {
         className: "",
         innerHTML: "",
         children: [],
+        style: {},
         append(child) { this.children.push(child); },
         addEventListener(type, handler) { this[`on${type}`] = handler; },
+        querySelector() { return { append() {} }; },
+        setAttribute() {},
+        select() {},
+        click() { if (tag === "a") downloadedFile = { ...downloadedFile, href: this.href, download: this.download }; },
+        remove() {},
       };
     },
   },
@@ -91,6 +107,7 @@ elements["#card-type"].value = "mastercard";
 elements["#card-count"].value = "10";
 context.generate();
 const batchTen = elements["#results"].children.length === 10;
+const batchActionsVisible = elements["#batch-actions"].hidden === false;
 
 const invalidResults = {};
 for (const value of ["0", "11", "1.5", ""]) {
@@ -105,13 +122,26 @@ for (const value of ["0", "11", "1.5", ""]) {
 const copyButton = { textContent: "Copy number" };
 await context.copyNumber("4111111111111111", copyButton);
 const copyWorks = copiedNumber === "4111111111111111" && copyButton.textContent === "Copied";
+const sampleCards = [context.createCard("visa"), context.createCard("american-express")];
+const jsonRecords = JSON.parse(context.cardsToJson(sampleCards));
+const jsonWorks = jsonRecords.length === 2 && Object.keys(jsonRecords[0]).join(",") === "brand,card_number,cvv,expiry";
+const csv = context.cardsToCsv(sampleCards);
+const csvWorks = csv.startsWith("brand,card_number,cvv,expiry\n") && csv.split("\n").length === 3;
+handlers.downloadCsv();
+const downloadedCsv = await downloadedFile.blob.text();
+const csvDownloadWorks = downloadedFile.download === "credit-card-test-data.csv" && downloadedCsv.startsWith("brand,card_number,cvv,expiry\n");
 
 const results = {
   profiles: profileResults,
   batchTen,
+  batchActionsVisible,
   invalidInputs: invalidResults,
   copyWorks,
+  jsonWorks,
+  csvWorks,
+  csvDownloadWorks,
   generateHandlerRegistered: typeof handlers.click === "function",
+  batchHandlersRegistered: typeof handlers.copyJson === "function" && typeof handlers.downloadCsv === "function",
 };
 
 console.log(JSON.stringify(results, null, 2));

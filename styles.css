@@ -17,15 +17,18 @@ button:hover { filter: brightness(.96); }
 .results:empty { display: none; }
 .card { padding: 22px; }
 .card-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; color: #566174; font-size: .875rem; font-weight: 750; }
-.number { margin: 18px 0 20px; overflow-wrap: anywhere; color: #18213a; font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: clamp(1.35rem, 5vw, 1.9rem); font-weight: 750; letter-spacing: .04em; }
+.number-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 14px; margin: 18px 0 20px; }
+.number { margin: 0; overflow-wrap: anywhere; color: #18213a; font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: clamp(1.35rem, 5vw, 1.9rem); font-weight: 750; letter-spacing: .04em; }
 .card-details { display: flex; flex-wrap: wrap; gap: 22px; }
 .card-details p { margin: 0; }
 .card-details span { display: block; color: #657083; font-size: .75rem; font-weight: 700; }
 .card-details strong { display: block; margin-top: 4px; color: #27324a; font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 1rem; }
-.copy { margin-top: 22px; }
+.copy { min-height: 38px; padding: 0 13px; }
+.batch-actions { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+.batch-actions[hidden] { display: none; }
 .info { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-top: 34px; }
 .info article { padding: 22px; box-shadow: none; }
 .info h2 { margin: 0 0 10px; font-size: 1rem; letter-spacing: -.01em; }
 .info p, .info ol { margin: 0; color: #566174; font-size: .92rem; line-height: 1.6; }
 .info ol { padding-left: 20px; }
-@media (max-width: 560px) { body { padding: 28px 16px 52px; } .controls, .info { grid-template-columns: 1fr; } .card-top { align-items: flex-start; flex-direction: column; } }
+@media (max-width: 560px) { body { padding: 28px 16px 52px; } .controls, .info { grid-template-columns: 1fr; } .card-top { align-items: flex-start; flex-direction: column; } .number-row { grid-template-columns: minmax(0, 1fr) auto; gap: 8px; } }

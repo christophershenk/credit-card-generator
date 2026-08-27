@@ -3,6 +3,10 @@ const cardCount = document.querySelector("#card-count");
 const generateButton = document.querySelector("#generate");
 const results = document.querySelector("#results");
 const feedback = document.querySelector("#feedback");
+const batchActions = document.querySelector("#batch-actions");
+const copyJsonButton = document.querySelector("#copy-json");
+const downloadCsvButton = document.querySelector("#download-csv");
+let currentCards = [];
 
 function randomDigit() { return Math.floor(Math.random() * 10); }
 
@@ -58,15 +62,40 @@ function fallbackCopy(number) {
   return copied;
 }
 
+async function copyText(text) {
+  if (navigator.clipboard) await navigator.clipboard.writeText(text);
+  else if (!fallbackCopy(text)) throw new Error("Copy failed");
+}
+
 async function copyNumber(number, button) {
   try {
-    if (navigator.clipboard) await navigator.clipboard.writeText(number);
-    else if (!fallbackCopy(number)) throw new Error("Copy failed");
+    await copyText(number);
     button.textContent = "Copied";
-    setTimeout(() => { button.textContent = "Copy number"; }, 1400);
+    setTimeout(() => { button.textContent = "Copy"; }, 1400);
   } catch {
     feedback.textContent = "Copy was unavailable. Select the number and copy it manually.";
   }
+}
+
+function exportRecords(cards) {
+  return cards.map(({ brand, number, cvv, validDate }) => ({
+    brand,
+    card_number: number,
+    cvv,
+    expiry: validDate,
+  }));
+}
+
+function cardsToJson(cards) {
+  return JSON.stringify(exportRecords(cards), null, 2);
+}
+
+function cardsToCsv(cards) {
+  const rows = exportRecords(cards);
+  const escape = (value) => `"${String(value).replace(/"/g, '""')}"`;
+  return ["brand,card_number,cvv,expiry", ...rows.map((row) =>
+    [row.brand, row.card_number, row.cvv, row.expiry].map(escape).join(",")
+  )].join("\n");
 }
 
 function renderCards(cards) {
@@ -74,13 +103,13 @@ function renderCards(cards) {
   cards.forEach((card) => {
     const element = document.createElement("article");
     element.className = "card";
-    element.innerHTML = `<div class="card-top"><span>${card.brand}</span><span>SYNTHETIC TEST DATA</span></div><p class="number">${formatCardNumber(card.number, card.type)}</p><div class="card-details"><p><span>CVV</span><strong>${card.cvv}</strong></p><p><span>Valid thru</span><strong>${card.validDate}</strong></p></div>`;
+    element.innerHTML = `<div class="card-top"><span>${card.brand}</span><span>SYNTHETIC TEST DATA</span></div><div class="number-row"><p class="number">${formatCardNumber(card.number, card.type)}</p></div><div class="card-details"><p><span>CVV</span><strong>${card.cvv}</strong></p><p><span>Valid thru</span><strong>${card.validDate}</strong></p></div>`;
     const button = document.createElement("button");
     button.className = "copy";
     button.type = "button";
-    button.textContent = "Copy number";
+    button.textContent = "Copy";
     button.addEventListener("click", () => copyNumber(card.number, button));
-    element.append(button);
+    element.querySelector(".number-row").append(button);
     results.append(element);
   });
 }
@@ -92,9 +121,32 @@ function generate() {
     cardCount.focus();
     return;
   }
-  const cards = Array.from({ length: count }, () => createCard(cardType.value));
-  renderCards(cards);
+  currentCards = Array.from({ length: count }, () => createCard(cardType.value));
+  renderCards(currentCards);
+  batchActions.hidden = false;
   feedback.textContent = `${count} synthetic ${cardProfiles[cardType.value].label} ${count === 1 ? "card" : "cards"} generated.`;
 }
 
 generateButton.addEventListener("click", generate);
+
+copyJsonButton.addEventListener("click", async () => {
+  try {
+    await copyText(cardsToJson(currentCards));
+    copyJsonButton.textContent = "JSON copied";
+    setTimeout(() => { copyJsonButton.textContent = "Copy JSON"; }, 1400);
+  } catch {
+    feedback.textContent = "JSON copy was unavailable.";
+  }
+});
+
+downloadCsvButton.addEventListener("click", () => {
+  const blob = new Blob([cardsToCsv(currentCards)], { type: "text/csv;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "credit-card-test-data.csv";
+  document.body.append(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+});
