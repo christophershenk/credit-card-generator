@@ -12,7 +12,9 @@
 
 我们已经完成了：需求信号初筛、支付能力边界澄清、BetterBugs/TestMu/VCC Generator 对标、MVP 需求文档和核心页面实现。
 
-GitHub 身份认证已完成；尚未开始：创建并关联 GitHub 仓库、完整本地验收、部署、域名、广告、登录或付费。
+GitHub 身份认证、公开仓库创建和首次推送已完成：<https://github.com/christophershenk/credit-card-generator>。
+
+尚未开始：完整本地验收、预览部署、域名、广告、登录或付费。
 
 ## 一句话产品定义
 
