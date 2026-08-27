@@ -18,6 +18,7 @@ const elements = {
 };
 
 let copiedNumber = "";
+let fallbackCommand = "";
 let downloadedFile = {};
 const context = {
   console,
@@ -36,6 +37,7 @@ const context = {
   navigator: { clipboard: { writeText(value) { copiedNumber = value; return Promise.resolve(); } } },
   document: {
     body: { append() {} },
+    execCommand(command) { fallbackCommand = command; return true; },
     querySelector(selector) { return elements[selector]; },
     createElement(tag) {
       return {
@@ -98,6 +100,7 @@ for (const [type, rule] of Object.entries(rules)) {
     luhn(card.number) &&
     card.cvv.length === rule.cvv &&
     /^[0-9]+$/.test(card.cvv) &&
+    /^[A-Za-z]+ [A-Za-z]+$/.test(card.cardholderName) &&
     /^(0[1-9]|1[0-2])\/[0-9]{2}$/.test(card.validDate) &&
     validFutureDate(card.validDate)
   );
@@ -122,14 +125,17 @@ for (const value of ["0", "11", "1.5", ""]) {
 const copyButton = { textContent: "Copy number" };
 await context.copyNumber("4111111111111111", copyButton);
 const copyWorks = copiedNumber === "4111111111111111" && copyButton.textContent === "Copied";
+context.navigator.clipboard.writeText = () => Promise.reject(new Error("Clipboard permission denied"));
+await context.copyText("fallback copy test");
+const fallbackCopyWorks = fallbackCommand === "copy";
 const sampleCards = [context.createCard("visa"), context.createCard("american-express")];
 const jsonRecords = JSON.parse(context.cardsToJson(sampleCards));
-const jsonWorks = jsonRecords.length === 2 && Object.keys(jsonRecords[0]).join(",") === "brand,card_number,cvv,expiry";
+const jsonWorks = jsonRecords.length === 2 && Object.keys(jsonRecords[0]).join(",") === "brand,cardholder_name,card_number,cvv,expiry";
 const csv = context.cardsToCsv(sampleCards);
-const csvWorks = csv.startsWith("brand,card_number,cvv,expiry\n") && csv.split("\n").length === 3;
+const csvWorks = csv.startsWith("brand,cardholder_name,card_number,cvv,expiry\n") && csv.split("\n").length === 3;
 handlers.downloadCsv();
 const downloadedCsv = await downloadedFile.blob.text();
-const csvDownloadWorks = downloadedFile.download === "credit-card-test-data.csv" && downloadedCsv.startsWith("brand,card_number,cvv,expiry\n");
+const csvDownloadWorks = downloadedFile.download === "credit-card-test-data.csv" && downloadedCsv.startsWith("brand,cardholder_name,card_number,cvv,expiry\n");
 
 const results = {
   profiles: profileResults,
@@ -137,6 +143,7 @@ const results = {
   batchActionsVisible,
   invalidInputs: invalidResults,
   copyWorks,
+  fallbackCopyWorks,
   jsonWorks,
   csvWorks,
   csvDownloadWorks,

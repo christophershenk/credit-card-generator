@@ -42,7 +42,7 @@
       <section class="info" aria-label="About this tool">
         <article>
           <h2>What this generator creates</h2>
-          <p>It creates synthetic card details with a selected card format, CVV, and a future valid-thru date. Card numbers follow basic format rules and pass the Luhn check used by many form validators.</p>
+          <p>It creates a synthetic cardholder name, card number, CVV, and future valid-thru date for the card type you select.</p>
         </article>
         <article>
           <h2>How to use it</h2>
@@ -57,10 +57,30 @@
           <p>Development, QA, demos, and testing how a form displays, formats, or validates card-shaped data.</p>
         </article>
         <article>
-          <h2>Important limitation</h2>
-          <p>These are synthetic test values. They are not connected to a bank, money, a credit limit, or a real cardholder, and are not intended for real payments or account verification.</p>
+          <h2>How it works</h2>
+          <p>Each number uses a typical prefix and length for its selected card type. The final digit is calculated so the complete number passes the Luhn checksum used by many forms to catch input errors.</p>
         </article>
       </section>
+
+      <section class="faq" aria-labelledby="faq-title">
+        <h2 id="faq-title">Frequently asked questions</h2>
+        <details>
+          <summary>Can these card details make a real payment?</summary>
+          <p>No. The generated details are synthetic and are not connected to a bank account, money, credit, or a real cardholder.</p>
+        </details>
+        <details>
+          <summary>What does “Luhn valid” mean?</summary>
+          <p>It means the number passes a mathematical checksum commonly used to catch typing mistakes. It does not mean that a bank issued the card or that the card can make a payment.</p>
+        </details>
+        <details>
+          <summary>Is the generated data stored?</summary>
+          <p>No. The values are generated in your browser and are not sent to or saved by this tool.</p>
+        </details>
+      </section>
+
+      <footer class="site-footer">
+        <p>Found an issue or have a suggestion? <a href="https://github.com/christophershenk/credit-card-generator/issues/new?template=feedback.yml" target="_blank" rel="noopener noreferrer">Send feedback on GitHub</a>. Submitted feedback is public.</p>
+      </footer>
     </main>
     <script src="app.js"></script>
   </body>

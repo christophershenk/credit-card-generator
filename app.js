@@ -44,9 +44,25 @@ function createValidDate() {
   return `${String(date.getMonth() + 1).padStart(2, "0")}/${String(date.getFullYear()).slice(-2)}`;
 }
 
+const firstNames = ["Alex", "Jordan", "Taylor", "Morgan", "Casey", "Riley", "Jamie", "Avery", "Cameron", "Quinn"];
+const lastNames = ["Morgan", "Chen", "Patel", "Garcia", "Kim", "Brown", "Wilson", "Martin", "Lee", "Davis"];
+
+function createCardholderName() {
+  const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
+  const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
+  return `${firstName} ${lastName}`;
+}
+
 function createCard(type) {
   const profile = cardProfiles[type];
-  return { type, brand: profile.label, number: createCardNumber(type), cvv: createCvv(profile.cvvLength), validDate: createValidDate() };
+  return {
+    type,
+    brand: profile.label,
+    cardholderName: createCardholderName(),
+    number: createCardNumber(type),
+    cvv: createCvv(profile.cvvLength),
+    validDate: createValidDate(),
+  };
 }
 
 function fallbackCopy(number) {
@@ -63,14 +79,22 @@ function fallbackCopy(number) {
 }
 
 async function copyText(text) {
-  if (navigator.clipboard) await navigator.clipboard.writeText(text);
-  else if (!fallbackCopy(text)) throw new Error("Copy failed");
+  if (navigator.clipboard) {
+    try {
+      await navigator.clipboard.writeText(text);
+      return;
+    } catch {
+      // Some browsers expose the Clipboard API but block it for this page.
+    }
+  }
+  if (!fallbackCopy(text)) throw new Error("Copy failed");
 }
 
 async function copyNumber(number, button) {
   try {
     await copyText(number);
     button.textContent = "Copied";
+    feedback.textContent = `Card number ending in ${number.slice(-4)} copied.`;
     setTimeout(() => { button.textContent = "Copy"; }, 1400);
   } catch {
     feedback.textContent = "Copy was unavailable. Select the number and copy it manually.";
@@ -78,8 +102,9 @@ async function copyNumber(number, button) {
 }
 
 function exportRecords(cards) {
-  return cards.map(({ brand, number, cvv, validDate }) => ({
+  return cards.map(({ brand, cardholderName, number, cvv, validDate }) => ({
     brand,
+    cardholder_name: cardholderName,
     card_number: number,
     cvv,
     expiry: validDate,
@@ -93,8 +118,8 @@ function cardsToJson(cards) {
 function cardsToCsv(cards) {
   const rows = exportRecords(cards);
   const escape = (value) => `"${String(value).replace(/"/g, '""')}"`;
-  return ["brand,card_number,cvv,expiry", ...rows.map((row) =>
-    [row.brand, row.card_number, row.cvv, row.expiry].map(escape).join(",")
+  return ["brand,cardholder_name,card_number,cvv,expiry", ...rows.map((row) =>
+    [row.brand, row.cardholder_name, row.card_number, row.cvv, row.expiry].map(escape).join(",")
   )].join("\n");
 }
 
@@ -103,11 +128,12 @@ function renderCards(cards) {
   cards.forEach((card) => {
     const element = document.createElement("article");
     element.className = "card";
-    element.innerHTML = `<div class="card-top"><span>${card.brand}</span><span>SYNTHETIC TEST DATA</span></div><div class="number-row"><p class="number">${formatCardNumber(card.number, card.type)}</p></div><div class="card-details"><p><span>CVV</span><strong>${card.cvv}</strong></p><p><span>Valid thru</span><strong>${card.validDate}</strong></p></div>`;
+    element.innerHTML = `<div class="card-top"><span>${card.brand}</span><span>SYNTHETIC TEST DATA</span></div><div class="number-row"><p class="number">${formatCardNumber(card.number, card.type)}</p></div><div class="card-details"><p class="cardholder"><span>Cardholder name</span><strong>${card.cardholderName}</strong></p><p><span>CVV</span><strong>${card.cvv}</strong></p><p><span>Valid thru</span><strong>${card.validDate}</strong></p></div>`;
     const button = document.createElement("button");
     button.className = "copy";
     button.type = "button";
     button.textContent = "Copy";
+    button.setAttribute("aria-label", `Copy ${card.brand} card number ending in ${card.number.slice(-4)}`);
     button.addEventListener("click", () => copyNumber(card.number, button));
     element.querySelector(".number-row").append(button);
     results.append(element);

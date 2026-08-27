@@ -1,0 +1,30 @@
+name: Product feedback
+description: Report a problem or suggest an improvement
+title: "[Feedback] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping improve Credit Card Generator. Please do not include real payment card details or personal information.
+  - type: dropdown
+    id: feedback-type
+    attributes:
+      label: Feedback type
+      options:
+        - Bug report
+        - Feature request
+        - General feedback
+    validations:
+      required: true
+  - type: textarea
+    id: details
+    attributes:
+      label: What happened, or what would you like to see?
+      placeholder: Tell us what you were trying to do and what could be improved.
+    validations:
+      required: true
+  - type: input
+    id: browser
+    attributes:
+      label: Browser (optional)
+      placeholder: For example, Chrome on Windows

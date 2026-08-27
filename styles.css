@@ -3,7 +3,7 @@
 body { margin: 0; min-width: 320px; padding: 48px 24px 72px; }
 main { width: min(100%, 760px); margin: 0 auto; }
 h1 { margin: 0 0 32px; font-size: clamp(2rem, 8vw, 3rem); letter-spacing: -0.04em; }
-.generator, .card, .info article { background: #fff; border: 1px solid #e1e5ed; border-radius: 18px; box-shadow: 0 12px 35px rgba(25, 32, 44, 0.06); }
+.generator, .card, .info article, .faq { background: #fff; border: 1px solid #e1e5ed; border-radius: 18px; box-shadow: 0 12px 35px rgba(25, 32, 44, 0.06); }
 .generator { padding: clamp(22px, 5vw, 32px); }
 .controls { display: grid; grid-template-columns: minmax(0, 1fr) 160px; gap: 16px; }
 label { display: block; margin-bottom: 9px; color: #566174; font-size: .875rem; font-weight: 700; }
@@ -20,6 +20,7 @@ button:hover { filter: brightness(.96); }
 .number-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 14px; margin: 18px 0 20px; }
 .number { margin: 0; overflow-wrap: anywhere; color: #18213a; font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: clamp(1.35rem, 5vw, 1.9rem); font-weight: 750; letter-spacing: .04em; }
 .card-details { display: flex; flex-wrap: wrap; gap: 22px; }
+.card-details .cardholder { flex: 1 1 220px; }
 .card-details p { margin: 0; }
 .card-details span { display: block; color: #657083; font-size: .75rem; font-weight: 700; }
 .card-details strong { display: block; margin-top: 4px; color: #27324a; font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 1rem; }
@@ -31,4 +32,12 @@ button:hover { filter: brightness(.96); }
 .info h2 { margin: 0 0 10px; font-size: 1rem; letter-spacing: -.01em; }
 .info p, .info ol { margin: 0; color: #566174; font-size: .92rem; line-height: 1.6; }
 .info ol { padding-left: 20px; }
+.faq { margin-top: 14px; padding: 22px; box-shadow: none; }
+.faq > h2 { margin: 0 0 8px; font-size: 1.15rem; }
+.faq details { border-top: 1px solid #e1e5ed; }
+.faq summary { padding: 16px 0; cursor: pointer; font-weight: 750; }
+.faq p { margin: -4px 0 17px; color: #566174; font-size: .92rem; line-height: 1.6; }
+.site-footer { padding: 20px 4px 0; text-align: center; }
+.site-footer p { margin: 0; color: #657083; font-size: .82rem; line-height: 1.55; }
+.site-footer a { color: #354bd3; font-weight: 700; }
 @media (max-width: 560px) { body { padding: 28px 16px 52px; } .controls, .info { grid-template-columns: 1fr; } .card-top { align-items: flex-start; flex-direction: column; } .number-row { grid-template-columns: minmax(0, 1fr) auto; gap: 8px; } }
