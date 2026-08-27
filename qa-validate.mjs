@@ -1,0 +1,118 @@
+import fs from "node:fs";
+import vm from "node:vm";
+
+const handlers = {};
+const elements = {
+  "#card-type": { value: "visa" },
+  "#card-count": { value: "1", focused: false, focus() { this.focused = true; } },
+  "#generate": { addEventListener(type, handler) { handlers[type] = handler; } },
+  "#results": {
+    children: [],
+    replaceChildren() { this.children = []; },
+    append(element) { this.children.push(element); },
+  },
+  "#feedback": { textContent: "" },
+};
+
+let copiedNumber = "";
+const context = {
+  console,
+  Date,
+  Math,
+  Number,
+  String,
+  Array,
+  Promise,
+  setTimeout() {},
+  navigator: { clipboard: { writeText(value) { copiedNumber = value; return Promise.resolve(); } } },
+  document: {
+    querySelector(selector) { return elements[selector]; },
+    createElement(tag) {
+      return {
+        tag,
+        className: "",
+        innerHTML: "",
+        children: [],
+        append(child) { this.children.push(child); },
+        addEventListener(type, handler) { this[`on${type}`] = handler; },
+      };
+    },
+  },
+};
+
+vm.createContext(context);
+vm.runInContext(fs.readFileSync(new URL("./app.js", import.meta.url), "utf8"), context);
+
+function luhn(number) {
+  return number.split("").reverse().reduce((sum, character, index) => {
+    let value = Number(character);
+    if (index % 2 === 1) {
+      value *= 2;
+      if (value > 9) value -= 9;
+    }
+    return sum + value;
+  }, 0) % 10 === 0;
+}
+
+const rules = {
+  visa: { length: 16, cvv: 3, prefix: (number) => number.startsWith("4") },
+  mastercard: { length: 16, cvv: 3, prefix: (number) => /^5[1-5]/.test(number) },
+  "american-express": { length: 15, cvv: 4, prefix: (number) => /^(34|37)/.test(number) },
+  discover: { length: 16, cvv: 3, prefix: (number) => number.startsWith("6011") },
+  jcb: { length: 16, cvv: 3, prefix: (number) => Number(number.slice(0, 4)) >= 3528 && Number(number.slice(0, 4)) <= 3589 },
+  unionpay: { length: 16, cvv: 3, prefix: (number) => number.startsWith("62") },
+  "diners-club": { length: 14, cvv: 3, prefix: (number) => number.startsWith("36") },
+};
+
+function validFutureDate(value) {
+  const [month, year] = value.split("/").map(Number);
+  const now = new Date();
+  const currentMonth = now.getFullYear() * 12 + now.getMonth();
+  const expiryMonth = (2000 + year) * 12 + month - 1;
+  const difference = expiryMonth - currentMonth;
+  return difference >= 1 && difference <= 60;
+}
+
+const profileResults = {};
+for (const [type, rule] of Object.entries(rules)) {
+  const cards = Array.from({ length: 1000 }, () => context.createCard(type));
+  profileResults[type] = cards.every((card) =>
+    card.number.length === rule.length &&
+    rule.prefix(card.number) &&
+    luhn(card.number) &&
+    card.cvv.length === rule.cvv &&
+    /^[0-9]+$/.test(card.cvv) &&
+    /^(0[1-9]|1[0-2])\/[0-9]{2}$/.test(card.validDate) &&
+    validFutureDate(card.validDate)
+  );
+}
+
+elements["#card-type"].value = "mastercard";
+elements["#card-count"].value = "10";
+context.generate();
+const batchTen = elements["#results"].children.length === 10;
+
+const invalidResults = {};
+for (const value of ["0", "11", "1.5", ""]) {
+  elements["#card-count"].value = value;
+  elements["#card-count"].focused = false;
+  context.generate();
+  invalidResults[value === "" ? "empty" : value] =
+    elements["#feedback"].textContent === "Choose a whole number from 1 to 10." &&
+    elements["#card-count"].focused;
+}
+
+const copyButton = { textContent: "Copy number" };
+await context.copyNumber("4111111111111111", copyButton);
+const copyWorks = copiedNumber === "4111111111111111" && copyButton.textContent === "Copied";
+
+const results = {
+  profiles: profileResults,
+  batchTen,
+  invalidInputs: invalidResults,
+  copyWorks,
+  generateHandlerRegistered: typeof handlers.click === "function",
+};
+
+console.log(JSON.stringify(results, null, 2));
+if (JSON.stringify(results).includes("false")) process.exitCode = 1;

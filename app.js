@@ -28,7 +28,11 @@ function createCardNumber(type) {
   return digits.join("");
 }
 
-function formatCardNumber(number) { return number.replace(/(.{4})/g, "$1 ").trim(); }
+function formatCardNumber(number, type) {
+  if (type === "american-express") return `${number.slice(0, 4)} ${number.slice(4, 10)} ${number.slice(10)}`;
+  if (type === "diners-club") return `${number.slice(0, 4)} ${number.slice(4, 10)} ${number.slice(10)}`;
+  return number.replace(/(.{4})/g, "$1 ").trim();
+}
 function createCvv(length) { return String(Math.floor(Math.random() * 10 ** length)).padStart(length, "0"); }
 function createValidDate() {
   const date = new Date();
@@ -38,20 +42,31 @@ function createValidDate() {
 
 function createCard(type) {
   const profile = cardProfiles[type];
-  return { brand: profile.label, number: createCardNumber(type), cvv: createCvv(profile.cvvLength), validDate: createValidDate() };
+  return { type, brand: profile.label, number: createCardNumber(type), cvv: createCvv(profile.cvvLength), validDate: createValidDate() };
 }
 
-function copyNumber(number, button) {
-  if (!navigator.clipboard) {
-    feedback.textContent = "Copy was unavailable. Select the number and copy it manually.";
-    return;
-  }
-  navigator.clipboard.writeText(number).then(() => {
+function fallbackCopy(number) {
+  const textarea = document.createElement("textarea");
+  textarea.value = number;
+  textarea.setAttribute("readonly", "");
+  textarea.style.position = "fixed";
+  textarea.style.opacity = "0";
+  document.body.append(textarea);
+  textarea.select();
+  const copied = document.execCommand("copy");
+  textarea.remove();
+  return copied;
+}
+
+async function copyNumber(number, button) {
+  try {
+    if (navigator.clipboard) await navigator.clipboard.writeText(number);
+    else if (!fallbackCopy(number)) throw new Error("Copy failed");
     button.textContent = "Copied";
     setTimeout(() => { button.textContent = "Copy number"; }, 1400);
-  }).catch(() => {
+  } catch {
     feedback.textContent = "Copy was unavailable. Select the number and copy it manually.";
-  });
+  }
 }
 
 function renderCards(cards) {
@@ -59,7 +74,7 @@ function renderCards(cards) {
   cards.forEach((card) => {
     const element = document.createElement("article");
     element.className = "card";
-    element.innerHTML = `<div class="card-top"><span>${card.brand}</span><span>SYNTHETIC TEST DATA</span></div><p class="number">${formatCardNumber(card.number)}</p><div class="card-details"><p><span>CVV</span><strong>${card.cvv}</strong></p><p><span>Valid thru</span><strong>${card.validDate}</strong></p></div>`;
+    element.innerHTML = `<div class="card-top"><span>${card.brand}</span><span>SYNTHETIC TEST DATA</span></div><p class="number">${formatCardNumber(card.number, card.type)}</p><div class="card-details"><p><span>CVV</span><strong>${card.cvv}</strong></p><p><span>Valid thru</span><strong>${card.validDate}</strong></p></div>`;
     const button = document.createElement("button");
     button.className = "copy";
     button.type = "button";
