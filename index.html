@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Generate synthetic card details for development, QA, demos, and form validation." />
+    <title>Credit Card Generator</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main>
+      <h1>Credit Card Generator</h1>
+      <section class="generator" aria-label="Card generator">
+        <div class="controls">
+          <div>
+            <label for="card-type">Card type</label>
+            <select id="card-type" name="card-type">
+              <option value="visa">Visa</option>
+              <option value="mastercard">Mastercard</option>
+              <option value="american-express">American Express</option>
+              <option value="discover">Discover</option>
+              <option value="jcb">JCB</option>
+              <option value="unionpay">UnionPay</option>
+              <option value="diners-club">Diners Club</option>
+            </select>
+          </div>
+          <div>
+            <label for="card-count">Number of cards</label>
+            <input id="card-count" name="card-count" type="number" min="1" max="10" step="1" value="1" inputmode="numeric" />
+          </div>
+        </div>
+        <button id="generate" class="generate" type="button">Generate cards</button>
+        <p id="feedback" class="feedback" aria-live="polite"></p>
+      </section>
+
+      <section id="results" class="results" aria-live="polite" aria-label="Generated cards"></section>
+
+      <section class="info" aria-label="About this tool">
+        <article>
+          <h2>What this generator creates</h2>
+          <p>It creates synthetic card details with a selected card format, CVV, and a future valid-thru date. Card numbers follow basic format rules and pass the Luhn check used by many form validators.</p>
+        </article>
+        <article>
+          <h2>How to use it</h2>
+          <ol>
+            <li>Select a card type.</li>
+            <li>Choose from 1 to 10 cards.</li>
+            <li>Generate, then copy the number you need.</li>
+          </ol>
+        </article>
+        <article>
+          <h2>Useful for</h2>
+          <p>Development, QA, demos, and testing how a form displays, formats, or validates card-shaped data.</p>
+        </article>
+        <article>
+          <h2>Important limitation</h2>
+          <p>These are synthetic test values. They are not connected to a bank, money, a credit limit, or a real cardholder, and are not intended for real payments or account verification.</p>
+        </article>
+      </section>
+    </main>
+    <script src="app.js"></script>
+  </body>
+</html>
