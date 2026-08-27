@@ -15,11 +15,13 @@ const elements = {
   "#batch-actions": { hidden: true },
   "#copy-json": { textContent: "Copy JSON", addEventListener(type, handler) { handlers.copyJson = handler; } },
   "#download-csv": { addEventListener(type, handler) { handlers.downloadCsv = handler; } },
+  "#feedback-link": { addEventListener(type, handler) { handlers.tallyFeedback = handler; } },
 };
 
 let copiedNumber = "";
 let fallbackCommand = "";
 let downloadedFile = {};
+let openedTallyForm = {};
 const context = {
   console,
   Date,
@@ -35,6 +37,11 @@ const context = {
   },
   setTimeout() {},
   navigator: { clipboard: { writeText(value) { copiedNumber = value; return Promise.resolve(); } } },
+  window: {
+    Tally: {
+      openPopup(formId, options) { openedTallyForm = { formId, options }; },
+    },
+  },
   document: {
     body: { append() {} },
     execCommand(command) { fallbackCommand = command; return true; },
@@ -136,6 +143,12 @@ const csvWorks = csv.startsWith("brand,cardholder_name,card_number,cvv,expiry\n"
 handlers.downloadCsv();
 const downloadedCsv = await downloadedFile.blob.text();
 const csvDownloadWorks = downloadedFile.download === "credit-card-test-data.csv" && downloadedCsv.startsWith("brand,cardholder_name,card_number,cvv,expiry\n");
+let feedbackNavigationPrevented = false;
+handlers.tallyFeedback({ preventDefault() { feedbackNavigationPrevented = true; } });
+const tallyFeedbackWorks =
+  feedbackNavigationPrevented &&
+  openedTallyForm.formId === "44Vd1o" &&
+  openedTallyForm.options.layout === "modal";
 
 const results = {
   profiles: profileResults,
@@ -147,8 +160,10 @@ const results = {
   jsonWorks,
   csvWorks,
   csvDownloadWorks,
+  tallyFeedbackWorks,
   generateHandlerRegistered: typeof handlers.click === "function",
   batchHandlersRegistered: typeof handlers.copyJson === "function" && typeof handlers.downloadCsv === "function",
+  feedbackHandlerRegistered: typeof handlers.tallyFeedback === "function",
 };
 
 console.log(JSON.stringify(results, null, 2));

@@ -6,6 +6,7 @@ const feedback = document.querySelector("#feedback");
 const batchActions = document.querySelector("#batch-actions");
 const copyJsonButton = document.querySelector("#copy-json");
 const downloadCsvButton = document.querySelector("#download-csv");
+const tallyFeedbackLink = document.querySelector("#feedback-link");
 let currentCards = [];
 
 function randomDigit() { return Math.floor(Math.random() * 10); }
@@ -176,3 +177,15 @@ downloadCsvButton.addEventListener("click", () => {
   link.remove();
   URL.revokeObjectURL(url);
 });
+
+if (tallyFeedbackLink) {
+  tallyFeedbackLink.addEventListener("click", (event) => {
+    if (!window.Tally?.openPopup) return;
+    event.preventDefault();
+    window.Tally.openPopup("44Vd1o", {
+      layout: "modal",
+      width: 520,
+      overlay: true,
+    });
+  });
+}
