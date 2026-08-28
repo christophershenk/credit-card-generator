@@ -18,7 +18,7 @@ GitHub 身份认证、公开仓库创建和首次推送已完成：<https://gith
 
 ## 一句话产品定义
 
-一个免费、无需登录的英文 `Credit Card Generator` 页面：选择 7 种主流卡组织之一和数量（1–10），生成带 CVV、有效期和可复制卡号的合成测试卡；批量结果可复制 JSON 或下载 CSV。
+一个免费、无需登录的英文 `Credit Card Generator` 页面：选择 7 种主流卡组织之一和数量（1–20），生成带 CVV、有效期和可复制卡号的合成测试卡；批量结果可复制 JSON 或下载 CSV。
 
 ## 本地查看
 
@@ -26,4 +26,4 @@ GitHub 身份认证、公开仓库创建和首次推送已完成：<https://gith
 
 ## 本地验收
 
-运行 `node qa-validate.mjs` 可复核七种卡组织、Luhn、CVV、有效期、1–10 张批量生成、错误输入、卡号复制、JSON 复制和 CSV 序列化。
+运行 `node qa-validate.mjs` 可复核七种卡组织、Luhn、CVV、有效期、1–20 张批量生成、错误输入、卡号复制、JSON 复制和 CSV 序列化。

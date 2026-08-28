@@ -14,14 +14,14 @@
 
 主要对标：[BetterBugs Credit Card Number Generator](https://www.betterbugs.io/development-tools/credit-card-generator)。
 
-保留：单页、无登录、Card Type、Number of Cards（1–10）、一个 Generate 按钮、可复制的结果卡片和简短说明内容。
+保留：单页、无登录、Card Type、Number of Cards（1–20）、一个 Generate 按钮、可复制的结果卡片和简短说明内容。
 
 不复制：BetterBugs 主产品的 QA 系统、Chrome 扩展、登录、团队协作和其他工具导航；以及“可用于软件免费试用”之类的承诺。
 
 ## 3. MVP 用户主流程
 
 ```text
-打开网页 → 选择 Card Type 和 Number of Cards（1–10）→ 点击 Generate → 查看并复制所需测试卡号
+打开网页 → 选择 Card Type 和 Number of Cards（1–20）→ 点击 Generate → 查看并复制所需测试卡号
 ```
 
 ## 4. MVP 功能范围
@@ -29,7 +29,7 @@
 ### 输入
 
 - `Card Type` 下拉：Visa、Mastercard、American Express、Discover、JCB、UnionPay、Diners Club。
-- `Number of Cards`：整数，范围 1–10，默认 1。
+- `Number of Cards`：整数，范围 1–20，默认 1。
 - 一个 `Generate Cards` 按钮。
 
 ### 输出
@@ -62,12 +62,12 @@
 
 ## 7. 验收标准
 
-1. 可选择全部 7 种卡组织及数量 1–10，点击按钮稳定生成相应数量的合成测试卡，且不报错。
+1. 可选择全部 7 种卡组织及数量 1–20，点击按钮稳定生成相应数量的合成测试卡，且不报错。
 2. 每张卡号符合所选组织的基础前缀和长度，并通过 Luhn 校验。
 3. 每张显示符合该组织规则长度的 CVV 和未来 1–5 年内的有效期。
 4. 每张的 Copy 按钮位于卡号右侧，可复制其号码并显示明确反馈。
 5. 批量结果可复制结构化 JSON，也可下载包含品牌、卡号、CVV 和有效期的 CSV。
-6. 数量不是 1–10 的整数时有明确提示。
+6. 数量不是 1–20 的整数时有明确提示。
 7. 手机宽度下无需横向滚动即可选择、生成、复制和导出。
 8. 页面不暗示可用于真实付款或免费试用。
 9. 页面不加载登录、支付、AI 或服务端密钥。

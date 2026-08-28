@@ -26,18 +26,18 @@
           </div>
           <div>
             <label for="card-count">Number of cards</label>
-            <input id="card-count" name="card-count" type="number" min="1" max="10" step="1" value="1" inputmode="numeric" />
+            <input id="card-count" name="card-count" type="number" min="1" max="20" step="1" value="1" inputmode="numeric" />
           </div>
         </div>
         <button id="generate" class="generate" type="button">Generate cards</button>
         <p id="feedback" class="feedback" aria-live="polite"></p>
       </section>
 
-      <section id="results" class="results" aria-live="polite" aria-label="Generated cards"></section>
       <div id="batch-actions" class="batch-actions" hidden>
         <button id="copy-json" type="button">Copy JSON</button>
         <button id="download-csv" type="button">Download CSV</button>
       </div>
+      <section id="results" class="results" aria-live="polite" aria-label="Generated cards"></section>
 
       <section class="info" aria-label="About this tool">
         <article>
@@ -48,7 +48,7 @@
           <h2>How to use it</h2>
           <ol>
             <li>Select a card type.</li>
-            <li>Choose from 1 to 10 cards.</li>
+            <li>Choose from 1 to 20 cards.</li>
             <li>Generate, then copy one number or export the batch.</li>
           </ol>
         </article>

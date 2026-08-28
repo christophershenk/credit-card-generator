@@ -114,18 +114,18 @@ for (const [type, rule] of Object.entries(rules)) {
 }
 
 elements["#card-type"].value = "mastercard";
-elements["#card-count"].value = "10";
+elements["#card-count"].value = "20";
 context.generate();
-const batchTen = elements["#results"].children.length === 10;
+const batchTwenty = elements["#results"].children.length === 20;
 const batchActionsVisible = elements["#batch-actions"].hidden === false;
 
 const invalidResults = {};
-for (const value of ["0", "11", "1.5", ""]) {
+for (const value of ["0", "21", "1.5", ""]) {
   elements["#card-count"].value = value;
   elements["#card-count"].focused = false;
   context.generate();
   invalidResults[value === "" ? "empty" : value] =
-    elements["#feedback"].textContent === "Choose a whole number from 1 to 10." &&
+    elements["#feedback"].textContent === "Choose a whole number from 1 to 20." &&
     elements["#card-count"].focused;
 }
 
@@ -152,7 +152,7 @@ const tallyFeedbackWorks =
 
 const results = {
   profiles: profileResults,
-  batchTen,
+  batchTwenty,
   batchActionsVisible,
   invalidInputs: invalidResults,
   copyWorks,

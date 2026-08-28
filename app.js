@@ -129,7 +129,7 @@ function renderCards(cards) {
   cards.forEach((card) => {
     const element = document.createElement("article");
     element.className = "card";
-    element.innerHTML = `<div class="card-top"><span>${card.brand}</span><span>SYNTHETIC TEST DATA</span></div><div class="number-row"><p class="number">${formatCardNumber(card.number, card.type)}</p></div><div class="card-details"><p class="cardholder"><span>Cardholder name</span><strong>${card.cardholderName}</strong></p><p><span>CVV</span><strong>${card.cvv}</strong></p><p><span>Valid thru</span><strong>${card.validDate}</strong></p></div>`;
+    element.innerHTML = `<div class="card-top"><span>${card.brand}</span></div><div class="number-row"><p class="number">${formatCardNumber(card.number, card.type)}</p></div><div class="card-details"><p class="cardholder"><span>Cardholder name</span><strong>${card.cardholderName}</strong></p><p><span>CVV</span><strong>${card.cvv}</strong></p><p><span>Valid thru</span><strong>${card.validDate}</strong></p></div>`;
     const button = document.createElement("button");
     button.className = "copy";
     button.type = "button";
@@ -143,8 +143,8 @@ function renderCards(cards) {
 
 function generate() {
   const count = Number(cardCount.value);
-  if (!Number.isInteger(count) || count < 1 || count > 10) {
-    feedback.textContent = "Choose a whole number from 1 to 10.";
+  if (!Number.isInteger(count) || count < 1 || count > 20) {
+    feedback.textContent = "Choose a whole number from 1 to 20.";
     cardCount.focus();
     return;
   }
