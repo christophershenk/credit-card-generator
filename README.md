@@ -7,14 +7,15 @@
 1. 先读 `RESEARCH_SUMMARY.md`：为什么保留这个方向、已知限制和对标结论。
 2. 再读 `MVP_REQUIREMENTS.md`：当前已讨论并收窄的第一版范围。
 3. 用 `PRODUCT_BUILD_WORKFLOW.md` 推进；以后询问“下一步是什么”时，按其中的当前状态和完成条件回答。
+4. 进入 SEO 后使用 `SEO_EXECUTION_RUNBOOK.md`；它是 SEO walkthrough、任务分工、验收清单和当前停止点的唯一主流程。
 
 ## 当前停止点
 
-我们已经完成了：需求信号初筛、支付能力边界澄清、BetterBugs/TestMu/VCC Generator 对标、MVP 需求文档和核心页面实现。
+我们已经完成了：需求信号初筛、支付能力边界澄清、BetterBugs/TestMu/VCC Generator 对标、MVP 需求文档、核心页面实现、GitHub/Cloudflare 自动部署、正式域名绑定和桌面/手机验收。
 
-GitHub 身份认证、公开仓库创建和首次推送已完成：<https://github.com/christophershenk/credit-card-generator>。
+GitHub 仓库：<https://github.com/christophershenk/credit-card-generator>。正式网站：<https://creditcardgenerator.online/>。
 
-尚未开始：完整本地验收、预览部署、域名、广告、登录或付费。
+当前停止点：按 `SEO_EXECUTION_RUNBOOK.md` 完成页面与技术 SEO 基础包；之后接入 GSC，再接 GA。广告、登录和付费尚未开始。
 
 ## 一句话产品定义
 
