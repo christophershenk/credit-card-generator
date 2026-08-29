@@ -62,5 +62,5 @@ SEO 和站点运营的详细执行顺序、复选框、分工与停止点记录�
 | 2. MVP 需求文档 | 完成 | 范围为 7 种主流卡组织、数量 1–20、CVV、有效期、JSON/CSV 和响应式批量结果 |
 | 3. GitHub、实现与本地验收 | 完成 | 自动与线上桌面/手机验收已通过 |
 | 4. 预览部署 | 完成 | GitHub 已连接 Cloudflare Pages，自动部署正常 |
-| 5. 正式域名上线 | 基本完成 | `creditcardgenerator.online` 已启用 HTTPS；待补 SEO 基础文件和 Privacy 页面 |
-| 6. SEO、流量、商业化与迭代 | **进行中** | 按 `SEO_EXECUTION_RUNBOOK.md` 先完成 SEO 基础包，再进入 GSC |
+| 5. 正式域名上线 | **完成** | `creditcardgenerator.online` 已启用 HTTPS，SEO 基础文件、favicon 和 Privacy 页面已上线 |
+| 6. SEO、流量、商业化与迭代 | **进行中** | GSC、Sitemap 和首页索引请求已完成；下一步决定匿名网站分析方案 |

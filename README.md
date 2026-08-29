@@ -15,7 +15,7 @@
 
 GitHub 仓库：<https://github.com/christophershenk/credit-card-generator>。正式网站：<https://creditcardgenerator.online/>。
 
-当前停止点：按 `SEO_EXECUTION_RUNBOOK.md` 完成页面与技术 SEO 基础包；之后接入 GSC，再接 GA。广告、登录和付费尚未开始。
+当前停止点：页面与技术 SEO 基础包、GSC Domain property、Sitemap 和首页索引请求均已完成。下一步决定接入 GA4、Cloudflare Web Analytics，还是暂缓分析脚本；广告、登录和付费尚未开始。
 
 ## 一句话产品定义
 

@@ -89,9 +89,9 @@
 - [x] 创建根目录 `sitemap.xml`，只放正式 canonical URL。
 - [x] 增加 favicon，并在首页与 Privacy 页面引用。
 - [x] 增加 Privacy 页面并从页脚链接。
-- [ ] 确认正式域名返回 200、HTTPS 正常、没有横向溢出和严重控制台错误。
-- [ ] 检查 `pages.dev` 地址与正式域名的重复内容处理：优先重定向，至少保证 canonical 统一。
-- [ ] 验证 `robots.txt`、`sitemap.xml`、favicon 和 Privacy 页面在正式域名可访问。
+- [x] 确认正式域名可通过 HTTPS 正常打开，没有横向溢出和严重控制台错误。
+- [x] 检查 `pages.dev` 地址与正式域名的重复内容处理：备用地址仍可访问，但 canonical 已统一指向正式域名。
+- [x] 验证 `robots.txt`、`sitemap.xml`、favicon 和 Privacy 页面：GSC 已成功读取 Sitemap 并发现 2 个页面，favicon 与 Privacy 已在线打开。
 
 ### Codex 负责
 
@@ -105,13 +105,13 @@
 
 ### 执行顺序
 
-1. 打开 `https://search.google.com/search-console`。
-2. 添加 Domain property：`creditcardgenerator.online`。
-3. 使用 Cloudflare DNS 完成所有权验证；如果需要新增 TXT 记录，提交前向用户说明具体记录。
-4. 在 GSC 提交 `https://creditcardgenerator.online/sitemap.xml`。
-5. 使用 URL Inspection 检查首页。
-6. 请求首页索引；不要反复提交同一 URL。
-7. 检查 Page indexing、HTTPS、Core Web Vitals 等报告是否有阻塞错误。
+1. [x] 打开 `https://search.google.com/search-console`。
+2. [x] 添加 Domain property：`creditcardgenerator.online`。
+3. [x] 使用 Cloudflare DNS TXT 记录完成所有权验证；未授权 Google 访问 Cloudflare 账户。
+4. [x] 在 GSC 提交 `https://creditcardgenerator.online/sitemap.xml`；状态为 `Success`，发现 2 个页面。
+5. [x] 使用 URL Inspection 检查首页；实时测试结果为 `URL is available to Google`。
+6. [x] 请求首页索引；已加入优先抓取队列，不重复提交。
+7. [x] 检查当前报告：新站数据仍在处理中，但没有抓取或索引阻塞错误。
 
 ### 分工
 
@@ -214,19 +214,21 @@
 
 ## 当前停止点
 
-**当前阶段：阶段 1–3，页面与技术 SEO 基础。**
+**当前阶段：阶段 4 已完成，准备决定是否接入网站分析。**
 
-**下一步唯一优先事项：继续完成 SEO 基础包中的技术文件。**
+**下一步唯一优先事项：决定使用 GA4、Cloudflare Web Analytics，还是暂缓分析脚本。**
 
 具体顺序：
 
 1. [x] 确认首页主词和直接搜索意图。
 2. [x] 更新 title、description、canonical 和 Open Graph 基础文字信息。
 3. [x] 完成技术文件：`robots.txt`、`sitemap.xml`、favicon 和 Privacy 页面已完成。
-4. 处理 `pages.dev` 与正式域名的重复地址。
-5. 部署并逐项验证线上 URL。
+4. [x] 检查 `pages.dev` 与正式域名：canonical 已统一到正式域名。
+5. [x] 部署并逐项验证线上 URL。
+6. [x] 完成 GSC Domain property、Sitemap、实时抓取测试和首页索引请求。
+7. [ ] 根据用户选择接入匿名网站分析，或记录暂缓决定。
 
-完成这一包后，才进入 GSC；GSC 完成后再接 GA；随后才开始外链冷启动。
+如果接入分析，必须先确认工具、隐私影响和数据范围，再更新 Privacy 页面并部署；分析基线建立后才开始外链冷启动。
 
 ## Walkthrough 协作规则
 
