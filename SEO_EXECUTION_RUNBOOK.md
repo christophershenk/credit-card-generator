@@ -88,7 +88,7 @@
 - [ ] 创建根目录 `robots.txt`，允许正常抓取并声明 Sitemap 地址。
 - [ ] 创建根目录 `sitemap.xml`，只放正式 canonical URL。
 - [ ] 增加 favicon。
-- [ ] 增加 Privacy 页面并从页脚链接。
+- [x] 增加 Privacy 页面并从页脚链接。
 - [ ] 确认正式域名返回 200、HTTPS 正常、没有横向溢出和严重控制台错误。
 - [ ] 检查 `pages.dev` 地址与正式域名的重复内容处理：优先重定向，至少保证 canonical 统一。
 - [ ] 验证 `robots.txt`、`sitemap.xml`、favicon 和 Privacy 页面在正式域名可访问。
