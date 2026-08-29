@@ -2,9 +2,11 @@
 
 ## 用途
 
-这是本项目以后执行 SEO 的唯一主流程。以后用户询问“SEO 下一步是什么”“现在做到哪里”或要求继续 SEO 时，先读取本文件的 `当前停止点`，只推进一个尚未完成且前置条件已满足的步骤。完成后立即更新清单和停止点，不需要反复打开俱乐部行动手册。
+这是本项目以后执行 SEO 的唯一进度与任务主流程。以后用户询问“SEO 下一步是什么”“现在做到哪里”或要求继续 SEO 时，先读取本文件的 `当前停止点`，只推进一个尚未完成且前置条件已满足的步骤。完成后立即更新清单和停止点，不需要反复打开俱乐部行动手册。
 
-本流程整理自《AI编程产品出海实战手册》的 SEO 与站点运营部分，并按当前项目的静态单页、Cloudflare Pages、公开 GitHub 仓库和广告候选商业模式做了收窄。
+做优先级判断、解释原因或决定是否采用某种 SEO 做法时，先读取 `SEO_OPERATIONS_METHOD.md`。该文件综合了行动手册、会议《俊哥AI_ SEO优化和站点运营》的智能纪要与文字记录，并使用 Google 官方文档校准了课程中的经验说法。
+
+本流程按 `SEO_OPERATIONS_METHOD.md` 的方法论收窄为适合当前静态工具站、Cloudflare Pages、公开 GitHub 仓库和广告候选商业模式的执行步骤。
 
 ## 执行原则
 
@@ -50,10 +52,11 @@
 4. 区分搜索意图：开发/QA、表单验证、随机测试数据，以及无法可靠满足的真实支付或试用验证。
 5. 写下本页独特价值，不把“与竞品一样”当作价值：快速、无登录、本地生成、7 种卡型、20 张批量、JSON/CSV、响应式界面。
 
-### 当前候选词
+### 已确认的首页基线
 
-- 首页主词候选：`credit card generator`
+- 首页主词：`random credit card generator`
 - 相关词：`random credit card generator`、`credit card number generator`、`test credit card generator`、`Luhn valid card generator`
+- 直接搜索意图：立即使用在线工具生成随机卡片信息。测试与免费试用等背后用途比例未知，不在上线前强行二选一。
 
 ### 产物
 
@@ -66,12 +69,12 @@
 
 ### 检查清单
 
-- [ ] `<title>` 包含主词，并清楚表达页面价值。
-- [ ] Meta description 与真实功能一致。
-- [x] 页面只有一个 H1：`Credit Card Generator`。
+- [x] `<title>` 包含主词，并清楚表达页面价值。
+- [x] Meta description 与真实功能一致。
+- [x] 页面只有一个 H1：`Random Credit Card Generator`。
 - [x] H2/H3 层级清楚，How it works 与 FAQ 是静态可抓取文本。
-- [ ] 增加 canonical，指向正式域名首页。
-- [ ] 增加 Open Graph / social sharing 基础信息。
+- [x] 增加 canonical，指向正式域名首页。
+- [x] 增加 Open Graph / social sharing 基础文字信息。
 - [ ] 检查正文是否覆盖核心问题，但不为字数堆砌内容。
 - [ ] 如果未来增加图片：使用描述性文件名、Alt 和压缩后的资源。
 - [ ] 只有出现真正不同的用户任务时才增加新页面，并使用内部链接连接。
@@ -213,13 +216,13 @@
 
 **当前阶段：阶段 1–3，页面与技术 SEO 基础。**
 
-**下一步唯一优先事项：完成 SEO 基础包。**
+**下一步唯一优先事项：继续完成 SEO 基础包中的技术文件。**
 
 具体顺序：
 
-1. 快速确认首页主词和搜索意图。
-2. 更新 title、description、canonical 和 Open Graph。
-3. 创建 `robots.txt`、`sitemap.xml`、favicon 和 Privacy 页面。
+1. [x] 确认首页主词和直接搜索意图。
+2. [x] 更新 title、description、canonical 和 Open Graph 基础文字信息。
+3. [ ] 创建 `robots.txt`、`sitemap.xml`、favicon 和 Privacy 页面。
 4. 处理 `pages.dev` 与正式域名的重复地址。
 5. 部署并逐项验证线上 URL。
 

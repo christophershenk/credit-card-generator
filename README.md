@@ -7,7 +7,7 @@
 1. 先读 `RESEARCH_SUMMARY.md`：为什么保留这个方向、已知限制和对标结论。
 2. 再读 `MVP_REQUIREMENTS.md`：当前已讨论并收窄的第一版范围。
 3. 用 `PRODUCT_BUILD_WORKFLOW.md` 推进；以后询问“下一步是什么”时，按其中的当前状态和完成条件回答。
-4. 进入 SEO 后使用 `SEO_EXECUTION_RUNBOOK.md`；它是 SEO walkthrough、任务分工、验收清单和当前停止点的唯一主流程。
+4. 进入 SEO 后先读 `SEO_OPERATIONS_METHOD.md` 理解优先级、证据和取舍，再使用 `SEO_EXECUTION_RUNBOOK.md` 推进 walkthrough、任务分工、验收清单和当前停止点。
 
 ## 当前停止点
 

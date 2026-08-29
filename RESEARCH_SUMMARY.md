@@ -5,7 +5,16 @@
 ## 1. 起点信号
 
 - Google Trends 的 `Generator` 相关查询中，`random credit card generator` 出现过高增长信号（本轮页面显示约 +2,350%，低于每日监控的 +3,000% 收录阈值）。
+- 2026-08-29 用户观察到该词的最新趋势页面接近 +3,900%；这是尚未由项目独立复核的相对增长观察，不是搜索量。
 - 与 `happy birthday images`、`GPTs` 的 Trends 对比显示持续相对热度；Google Trends 指数是比较条件下的标准化值，不能当作绝对搜索量或转化量。
+
+### 首页关键词基线（2026-08-29）
+
+- 首页主关键词：`random credit card generator`。
+- 相关表达：`credit card generator`、`credit card number generator`、`test credit card generator`。
+- 可确认的直接搜索意图：用户希望立即使用一个在线工具生成随机卡片信息。
+- 尚不确定的背后用途：开发/测试、免费试用绑卡或其他用途；当前没有可靠比例，不在上线前强行二选一。
+- 页面表达保持用途中性，准确说明生成内容和能力边界，不承诺真实支付、发卡行授权或绕过验证。
 
 ## 2. 搜索者可能在找什么
 
@@ -70,7 +79,7 @@ https://www.vccgenerator.org/
 
 - 第一版优先 BetterBugs 式“直接生成、直接看卡片”，不在生成前增加 Output Format。
 - 不加 TestMu/VCC 的地址、银行、国家、BIN、金额、PIN、高级模式和 API；仅保留批量结果的 `Copy JSON` 与 `Download CSV`。
-- 产品 H1 可为 `Credit Card Generator`；说明必须诚实标注 synthetic test data / development / QA / demos / form validation。
+- 首页 H1 为 `Random Credit Card Generator`；首屏中性描述生成能力，测试、development、QA、demos 和 form validation 作为下方可用场景，而不是限制所有用户的首屏定位。
 - 不把 `fake` 作为主要产品卖点，也不写“可绕过试用”“无需真实卡”“可用于真实支付”等承诺。
 - 第一版无需 AI、Token、第三方 API、账号、数据库、支付或后台。
 
