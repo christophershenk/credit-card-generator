@@ -85,8 +85,8 @@
 
 ### 必做文件与配置
 
-- [ ] 创建根目录 `robots.txt`，允许正常抓取并声明 Sitemap 地址。
-- [ ] 创建根目录 `sitemap.xml`，只放正式 canonical URL。
+- [x] 创建根目录 `robots.txt`，允许正常抓取并声明 Sitemap 地址。
+- [x] 创建根目录 `sitemap.xml`，只放正式 canonical URL。
 - [ ] 增加 favicon。
 - [x] 增加 Privacy 页面并从页脚链接。
 - [ ] 确认正式域名返回 200、HTTPS 正常、没有横向溢出和严重控制台错误。
@@ -222,7 +222,7 @@
 
 1. [x] 确认首页主词和直接搜索意图。
 2. [x] 更新 title、description、canonical 和 Open Graph 基础文字信息。
-3. [ ] 创建 `robots.txt`、`sitemap.xml`、favicon 和 Privacy 页面。
+3. [ ] 完成技术文件：`robots.txt`、`sitemap.xml` 和 Privacy 页面已完成，favicon 待完成。
 4. 处理 `pages.dev` 与正式域名的重复地址。
 5. 部署并逐项验证线上 URL。
 
