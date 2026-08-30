@@ -124,11 +124,11 @@
 
 ### 执行顺序
 
-1. 打开 `https://analytics.google.com/`，创建 GA4 媒体资源和 Web data stream。
-2. 域名填写 `https://creditcardgenerator.online/`。
-3. 获取 Measurement ID，并将官方脚本加入网站。
-4. 部署后在 Realtime 验证访问是否出现。
-5. 只记录匿名产品行为，不发送生成的卡号、CVV、姓名或其他敏感内容。
+1. [x] 创建 GA4 媒体资源 `Credit Card Generator` 和 Web data stream。
+2. [x] Web data stream 使用 `https://creditcardgenerator.online/`。
+3. [x] 将 Measurement ID `G-D59QC6ZC3D` 的 Google tag 加入首页和 Privacy 页面并部署。
+4. [ ] 在 Realtime 验证真实访问出现；Codex 的受控浏览器会拦截分析请求，因此需要使用未拦截 Google Analytics 的普通浏览器或手机访问一次。
+5. [x] Privacy 页面已更新；基础配置只记录页面访问等匿名测量，不发送生成的卡号、CVV、姓名或其他生成结果。
 
 ### 候选匿名事件
 
