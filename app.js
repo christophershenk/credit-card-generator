@@ -11,6 +11,11 @@ let currentCards = [];
 
 function randomDigit() { return Math.floor(Math.random() * 10); }
 
+function trackSiteEvent(eventName, parameters = {}) {
+  if (typeof window.gtag !== "function") return;
+  window.gtag("event", eventName, parameters);
+}
+
 const cardProfiles = {
   visa: { label: "Visa", length: 16, cvvLength: 3, prefix: () => [4] },
   mastercard: { label: "Mastercard", length: 16, cvvLength: 3, prefix: () => [5, 1 + Math.floor(Math.random() * 5)] },
@@ -91,11 +96,12 @@ async function copyText(text) {
   if (!fallbackCopy(text)) throw new Error("Copy failed");
 }
 
-async function copyNumber(number, button) {
+async function copyNumber(number, button, type = "unknown") {
   try {
     await copyText(number);
     button.textContent = "Copied";
     feedback.textContent = `Card number ending in ${number.slice(-4)} copied.`;
+    trackSiteEvent("copy_number", { card_type: type });
     setTimeout(() => { button.textContent = "Copy"; }, 1400);
   } catch {
     feedback.textContent = "Copy was unavailable. Select the number and copy it manually.";
@@ -135,7 +141,7 @@ function renderCards(cards) {
     button.type = "button";
     button.textContent = "Copy";
     button.setAttribute("aria-label", `Copy ${card.brand} card number ending in ${card.number.slice(-4)}`);
-    button.addEventListener("click", () => copyNumber(card.number, button));
+    button.addEventListener("click", () => copyNumber(card.number, button, card.type));
     element.querySelector(".number-row").append(button);
     results.append(element);
   });
@@ -152,6 +158,7 @@ function generate() {
   renderCards(currentCards);
   batchActions.hidden = false;
   feedback.textContent = `${count} synthetic ${cardProfiles[cardType.value].label} ${count === 1 ? "card" : "cards"} generated.`;
+  trackSiteEvent("generate_cards", { card_type: cardType.value, card_count: count });
 }
 
 generateButton.addEventListener("click", generate);
@@ -160,6 +167,7 @@ copyJsonButton.addEventListener("click", async () => {
   try {
     await copyText(cardsToJson(currentCards));
     copyJsonButton.textContent = "JSON copied";
+    trackSiteEvent("copy_json", { card_count: currentCards.length });
     setTimeout(() => { copyJsonButton.textContent = "Copy JSON"; }, 1400);
   } catch {
     feedback.textContent = "JSON copy was unavailable.";
@@ -176,10 +184,12 @@ downloadCsvButton.addEventListener("click", () => {
   link.click();
   link.remove();
   URL.revokeObjectURL(url);
+  trackSiteEvent("download_csv", { card_count: currentCards.length });
 });
 
 if (tallyFeedbackLink) {
   tallyFeedbackLink.addEventListener("click", (event) => {
+    trackSiteEvent("open_feedback");
     if (!window.Tally?.openPopup) return;
     event.preventDefault();
     window.Tally.openPopup("44Vd1o", {

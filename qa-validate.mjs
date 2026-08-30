@@ -22,6 +22,7 @@ let copiedNumber = "";
 let fallbackCommand = "";
 let downloadedFile = {};
 let openedTallyForm = {};
+const trackingEvents = [];
 const context = {
   console,
   Date,
@@ -38,6 +39,7 @@ const context = {
   setTimeout() {},
   navigator: { clipboard: { writeText(value) { copiedNumber = value; return Promise.resolve(); } } },
   window: {
+    gtag(...args) { trackingEvents.push(args); },
     Tally: {
       openPopup(formId, options) { openedTallyForm = { formId, options }; },
     },
@@ -130,7 +132,7 @@ for (const value of ["0", "21", "1.5", ""]) {
 }
 
 const copyButton = { textContent: "Copy number" };
-await context.copyNumber("4111111111111111", copyButton);
+await context.copyNumber("4111111111111111", copyButton, "visa");
 const copyWorks = copiedNumber === "4111111111111111" && copyButton.textContent === "Copied";
 context.navigator.clipboard.writeText = () => Promise.reject(new Error("Clipboard permission denied"));
 await context.copyText("fallback copy test");
@@ -140,6 +142,7 @@ const jsonRecords = JSON.parse(context.cardsToJson(sampleCards));
 const jsonWorks = jsonRecords.length === 2 && Object.keys(jsonRecords[0]).join(",") === "brand,cardholder_name,card_number,cvv,expiry";
 const csv = context.cardsToCsv(sampleCards);
 const csvWorks = csv.startsWith("brand,cardholder_name,card_number,cvv,expiry\n") && csv.split("\n").length === 3;
+await handlers.copyJson();
 handlers.downloadCsv();
 const downloadedCsv = await downloadedFile.blob.text();
 const csvDownloadWorks = downloadedFile.download === "credit-card-test-data.csv" && downloadedCsv.startsWith("brand,cardholder_name,card_number,cvv,expiry\n");
@@ -149,6 +152,13 @@ const tallyFeedbackWorks =
   feedbackNavigationPrevented &&
   openedTallyForm.formId === "44Vd1o" &&
   openedTallyForm.options.layout === "modal";
+const expectedTrackingEvents = ["generate_cards", "copy_number", "copy_json", "download_csv", "open_feedback"];
+const trackingEventNames = trackingEvents.map(([, eventName]) => eventName);
+const trackingEventsWork = expectedTrackingEvents.every((eventName) => trackingEventNames.includes(eventName));
+const trackingPayloadIsSafe = trackingEvents.every(([, , parameters = {}]) =>
+  Object.keys(parameters).every((key) => ["card_type", "card_count"].includes(key)) &&
+  !/4111111111111111|card_number|cvv|cardholder|expiry|validDate/i.test(JSON.stringify(parameters))
+);
 
 const results = {
   profiles: profileResults,
@@ -161,6 +171,8 @@ const results = {
   csvWorks,
   csvDownloadWorks,
   tallyFeedbackWorks,
+  trackingEventsWork,
+  trackingPayloadIsSafe,
   generateHandlerRegistered: typeof handlers.click === "function",
   batchHandlersRegistered: typeof handlers.copyJson === "function" && typeof handlers.downloadCsv === "function",
   feedbackHandlerRegistered: typeof handlers.tallyFeedback === "function",
