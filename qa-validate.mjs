@@ -57,7 +57,7 @@ const context = {
         style: {},
         append(child) { this.children.push(child); },
         addEventListener(type, handler) { this[`on${type}`] = handler; },
-        querySelector() { return { append() {} }; },
+        querySelector() { return { addEventListener() {} }; },
         setAttribute() {},
         select() {},
         click() { if (tag === "a") downloadedFile = { ...downloadedFile, href: this.href, download: this.download }; },
@@ -120,6 +120,12 @@ elements["#card-count"].value = "20";
 context.generate();
 const batchTwenty = elements["#results"].children.length === 20;
 const batchActionsVisible = elements["#batch-actions"].hidden === false;
+const firstRenderedCard = elements["#results"].children[0]?.innerHTML || "";
+const clickToCopyControlsRendered =
+  firstRenderedCard.includes("copy-number") &&
+  firstRenderedCard.includes("copy-cardholder") &&
+  firstRenderedCard.includes("copy-cvv") &&
+  !firstRenderedCard.includes("copy-expiry");
 
 const invalidResults = {};
 for (const value of ["0", "21", "1.5", ""]) {
@@ -131,9 +137,29 @@ for (const value of ["0", "21", "1.5", ""]) {
     elements["#card-count"].focused;
 }
 
-const copyButton = { textContent: "Copy number" };
+function mockCopyButton(label) {
+  const classes = new Set();
+  const attributes = new Map([["aria-label", label]]);
+  return {
+    classList: {
+      add(value) { classes.add(value); },
+      remove(value) { classes.delete(value); },
+      contains(value) { return classes.has(value); },
+    },
+    getAttribute(name) { return attributes.get(name) || null; },
+    setAttribute(name, value) { attributes.set(name, value); },
+  };
+}
+
+const copyButton = mockCopyButton("Copy Visa card number");
 await context.copyNumber("4111111111111111", copyButton, "visa");
-const copyWorks = copiedNumber === "4111111111111111" && copyButton.textContent === "Copied";
+const copyWorks = copiedNumber === "4111111111111111" && copyButton.classList.contains("is-copied");
+const nameCopyButton = mockCopyButton("Copy cardholder name");
+await context.copyCardField("Alex Morgan", nameCopyButton, "cardholder", "visa");
+const nameCopyWorks = copiedNumber === "Alex Morgan" && nameCopyButton.classList.contains("is-copied");
+const cvvCopyButton = mockCopyButton("Copy CVV");
+await context.copyCardField("123", cvvCopyButton, "cvv", "visa");
+const cvvCopyWorks = copiedNumber === "123" && cvvCopyButton.classList.contains("is-copied");
 context.navigator.clipboard.writeText = () => Promise.reject(new Error("Clipboard permission denied"));
 await context.copyText("fallback copy test");
 const fallbackCopyWorks = fallbackCommand === "copy";
@@ -164,8 +190,11 @@ const results = {
   profiles: profileResults,
   batchTwenty,
   batchActionsVisible,
+  clickToCopyControlsRendered,
   invalidInputs: invalidResults,
   copyWorks,
+  nameCopyWorks,
+  cvvCopyWorks,
   fallbackCopyWorks,
   jsonWorks,
   csvWorks,

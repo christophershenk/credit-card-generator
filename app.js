@@ -96,16 +96,37 @@ async function copyText(text) {
   if (!fallbackCopy(text)) throw new Error("Copy failed");
 }
 
-async function copyNumber(number, button, type = "unknown") {
+async function copyCardField(value, button, field, type = "unknown") {
+  const labels = {
+    number: "Card number",
+    cardholder: "Cardholder name",
+    cvv: "CVV",
+  };
+  const label = labels[field] || "Value";
+  const originalAriaLabel = button.getAttribute("aria-label");
   try {
-    await copyText(number);
-    button.textContent = "Copied";
-    feedback.textContent = `Card number ending in ${number.slice(-4)} copied.`;
-    trackSiteEvent("copy_number", { card_type: type });
-    setTimeout(() => { button.textContent = "Copy"; }, 1400);
+    await copyText(value);
+    button.classList.add("is-copied");
+    button.setAttribute("aria-label", `${label} copied`);
+    feedback.textContent = field === "number"
+      ? `Card number ending in ${value.slice(-4)} copied.`
+      : `${label} copied.`;
+    if (field === "number") trackSiteEvent("copy_number", { card_type: type });
+    setTimeout(() => {
+      button.classList.remove("is-copied");
+      button.setAttribute("aria-label", originalAriaLabel);
+    }, 1400);
   } catch {
-    feedback.textContent = "Copy was unavailable. Select the number and copy it manually.";
+    feedback.textContent = `Copy was unavailable. Select the ${label.toLowerCase()} and copy it manually.`;
   }
+}
+
+function copyNumber(number, button, type = "unknown") {
+  return copyCardField(number, button, "number", type);
+}
+
+function copyButtonMarkup(value, className, ariaLabel) {
+  return `<button class="copy-value ${className}" type="button" aria-label="${ariaLabel}"><span>${value}</span><span class="copy-symbol" aria-hidden="true"><svg class="copy-glyph" viewBox="0 0 24 24" focusable="false"><rect x="8" y="8" width="11" height="11" rx="2"></rect><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"></path></svg><svg class="check-glyph" viewBox="0 0 24 24" focusable="false"><path d="m5 12 4 4L19 6"></path></svg></span></button>`;
 }
 
 function exportRecords(cards) {
@@ -135,14 +156,13 @@ function renderCards(cards) {
   cards.forEach((card) => {
     const element = document.createElement("article");
     element.className = "card";
-    element.innerHTML = `<div class="card-top"><span>${card.brand}</span></div><div class="number-row"><p class="number">${formatCardNumber(card.number, card.type)}</p></div><div class="card-details"><p class="cardholder"><span>Cardholder name</span><strong>${card.cardholderName}</strong></p><p><span>CVV</span><strong>${card.cvv}</strong></p><p><span>Valid thru</span><strong>${card.validDate}</strong></p></div>`;
-    const button = document.createElement("button");
-    button.className = "copy";
-    button.type = "button";
-    button.textContent = "Copy";
-    button.setAttribute("aria-label", `Copy ${card.brand} card number ending in ${card.number.slice(-4)}`);
-    button.addEventListener("click", () => copyNumber(card.number, button, card.type));
-    element.querySelector(".number-row").append(button);
+    element.innerHTML = `<div class="card-top"><span>${card.brand}</span></div><div class="number-row">${copyButtonMarkup(formatCardNumber(card.number, card.type), "number copy-number", `Copy ${card.brand} card number ending in ${card.number.slice(-4)}`)}</div><div class="card-details"><p class="cardholder"><span>Cardholder name</span>${copyButtonMarkup(card.cardholderName, "copy-cardholder", "Copy cardholder name")}</p><p><span>CVV</span>${copyButtonMarkup(card.cvv, "copy-cvv", "Copy CVV")}</p><p><span>Valid thru</span><strong>${card.validDate}</strong></p></div>`;
+    const numberButton = element.querySelector(".copy-number");
+    const cardholderButton = element.querySelector(".copy-cardholder");
+    const cvvButton = element.querySelector(".copy-cvv");
+    numberButton.addEventListener("click", () => copyCardField(card.number, numberButton, "number", card.type));
+    cardholderButton.addEventListener("click", () => copyCardField(card.cardholderName, cardholderButton, "cardholder", card.type));
+    cvvButton.addEventListener("click", () => copyCardField(card.cvv, cvvButton, "cvv", card.type));
     results.append(element);
   });
 }
