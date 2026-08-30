@@ -19,7 +19,7 @@
       content="Generate up to 20 random, Luhn-valid card records with CVV and expiry, then copy or export them."
     />
     <title>Random Credit Card Generator – Visa, Mastercard &amp; More</title>
-    <link rel="stylesheet" href="styles.css?v=5" />
+    <link rel="stylesheet" href="styles.css?v=6" />
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-D59QC6ZC3D"></script>
     <script src="site-metrics.js?v=1"></script>
   </head>
@@ -28,55 +28,57 @@
       <h1>Random Credit Card Generator</h1>
       <p class="copy-hint">Tap or click the card number, name, or CVV to copy it.</p>
       <div class="tool-layout">
-        <section class="generator" aria-label="Card generator">
-          <div class="controls">
-            <div>
-              <label for="card-type">Card type</label>
-              <select id="card-type" name="card-type">
-                <option value="visa">Visa</option>
-                <option value="mastercard">Mastercard</option>
-                <option value="american-express">American Express</option>
-                <option value="discover">Discover</option>
-                <option value="jcb">JCB</option>
-                <option value="unionpay">UnionPay</option>
-                <option value="diners-club">Diners Club</option>
-              </select>
+        <div class="generator-stack">
+          <section class="generator" aria-label="Card generator">
+            <div class="controls">
+              <div>
+                <label for="card-type">Card type</label>
+                <select id="card-type" name="card-type">
+                  <option value="visa">Visa</option>
+                  <option value="mastercard">Mastercard</option>
+                  <option value="american-express">American Express</option>
+                  <option value="discover">Discover</option>
+                  <option value="jcb">JCB</option>
+                  <option value="unionpay">UnionPay</option>
+                  <option value="diners-club">Diners Club</option>
+                </select>
+              </div>
+              <div>
+                <label for="card-count">Number of cards</label>
+                <input id="card-count" name="card-count" type="number" min="1" max="20" step="1" value="1" inputmode="numeric" />
+              </div>
             </div>
-            <div>
-              <label for="card-count">Number of cards</label>
-              <input id="card-count" name="card-count" type="number" min="1" max="20" step="1" value="1" inputmode="numeric" />
-            </div>
+            <button id="generate" class="generate" type="button">Generate cards</button>
+            <p id="feedback" class="feedback" aria-live="polite"></p>
+          </section>
+
+          <div id="batch-actions" class="batch-actions" hidden>
+            <button id="copy-json" type="button">Copy JSON</button>
+            <button id="download-csv" type="button">Download CSV</button>
           </div>
-          <button id="generate" class="generate" type="button">Generate cards</button>
-          <p id="feedback" class="feedback" aria-live="polite"></p>
-        </section>
+          <section id="results" class="results" aria-live="polite" aria-label="Generated cards"></section>
+        </div>
 
         <aside class="qa-pack" aria-labelledby="qa-pack-title">
-          <p class="eyebrow">For QA and developers</p>
+          <p class="eyebrow">For QA &amp; developers</p>
           <h2 id="qa-pack-title">Generate Test Cases</h2>
-          <p class="qa-intro">Turn one generated card into four ready-to-use form checks: a valid card, an invalid number, an expired date, and an invalid CVV.</p>
+          <p class="qa-intro">Create four payment-form test cases from one generated card: a valid card, an invalid card number, an expired date, and an invalid CVV.</p>
           <div class="qa-options">
             <section class="qa-option">
-              <h3>Copy for AI</h3>
-              <p>Paste a readable test plan into AI tools, or use it as a manual QA checklist.</p>
-              <button id="copy-qa-plan" type="button" disabled>Copy AI Test Plan</button>
+              <h3>Use with AI</h3>
+              <p>Copy a step-by-step test plan with inputs and expected results. Paste it into an AI tool or follow it manually.</p>
+              <button id="copy-qa-plan" type="button" disabled>Copy Test Plan</button>
             </section>
             <section class="qa-option">
-              <h3>Download JSON</h3>
-              <p>Use structured cases in Playwright, Cypress, or your own test code.</p>
-              <button id="download-qa-json" type="button" disabled>Download JSON Pack</button>
+              <h3>Use in Code</h3>
+              <p>Download the same four cases as JSON for Playwright, Cypress, or other test tools.</p>
+              <button id="download-qa-json" type="button" disabled>Download JSON</button>
             </section>
           </div>
           <p class="qa-note">Uses the first generated card. It tests client-side formatting only; customize selectors and messages, and use your payment provider's official sandbox for transaction behavior.</p>
           <p id="qa-pack-status" class="qa-status" aria-live="polite">Generate a card to unlock four test cases.</p>
         </aside>
       </div>
-
-      <div id="batch-actions" class="batch-actions" hidden>
-        <button id="copy-json" type="button">Copy JSON</button>
-        <button id="download-csv" type="button">Download CSV</button>
-      </div>
-      <section id="results" class="results" aria-live="polite" aria-label="Generated cards"></section>
 
       <section class="info" aria-label="About this tool">
         <article>

@@ -15,7 +15,7 @@ const elements = {
   "#batch-actions": { hidden: true },
   "#copy-json": { textContent: "Copy JSON", addEventListener(type, handler) { handlers.copyJson = handler; } },
   "#download-csv": { addEventListener(type, handler) { handlers.downloadCsv = handler; } },
-  "#copy-qa-plan": { textContent: "Copy AI Test Plan", disabled: true, addEventListener(type, handler) { handlers.copyQaPlan = handler; } },
+  "#copy-qa-plan": { textContent: "Copy Test Plan", disabled: true, addEventListener(type, handler) { handlers.copyQaPlan = handler; } },
   "#download-qa-json": { disabled: true, addEventListener(type, handler) { handlers.downloadQaJson = handler; } },
   "#qa-pack-status": { textContent: "Generate a card to enable both options." },
   "#feedback-link": { addEventListener(type, handler) { handlers.tallyFeedback = handler; } },
@@ -193,7 +193,7 @@ const downloadedCsv = await downloadedFile.blob.text();
 const csvDownloadWorks = downloadedFile.download === "credit-card-test-data.csv" && downloadedCsv.startsWith("brand,cardholder_name,card_number,cvv,expiry\n");
 context.navigator.clipboard.writeText = (value) => { copiedNumber = value; return Promise.resolve(); };
 await handlers.copyQaPlan();
-const qaPlanCopyWorks = copiedNumber.includes("# Payment Form QA Test Pack") && elements["#copy-qa-plan"].textContent === "AI Test Plan copied";
+const qaPlanCopyWorks = copiedNumber.includes("# Payment Form QA Test Pack") && elements["#copy-qa-plan"].textContent === "Test plan copied";
 handlers.downloadQaJson();
 const downloadedQaJson = JSON.parse(await downloadedFile.blob.text());
 const qaJsonDownloadWorks =

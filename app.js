@@ -283,9 +283,9 @@ copyQaPlanButton.addEventListener("click", async () => {
   if (!pack) return;
   try {
     await copyText(qaPackToMarkdown(pack));
-    copyQaPlanButton.textContent = "AI Test Plan copied";
+    copyQaPlanButton.textContent = "Test plan copied";
     qaPackStatus.textContent = "Paste the plan into an AI tool that can access your project, or use it as a manual checklist.";
-    setTimeout(() => { copyQaPlanButton.textContent = "Copy AI Test Plan"; }, 1400);
+    setTimeout(() => { copyQaPlanButton.textContent = "Copy Test Plan"; }, 1400);
   } catch {
     qaPackStatus.textContent = "Copy was unavailable. Try the JSON download instead.";
   }
