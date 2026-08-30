@@ -15,6 +15,9 @@ const elements = {
   "#batch-actions": { hidden: true },
   "#copy-json": { textContent: "Copy JSON", addEventListener(type, handler) { handlers.copyJson = handler; } },
   "#download-csv": { addEventListener(type, handler) { handlers.downloadCsv = handler; } },
+  "#copy-qa-plan": { textContent: "Copy AI Test Plan", disabled: true, addEventListener(type, handler) { handlers.copyQaPlan = handler; } },
+  "#download-qa-json": { disabled: true, addEventListener(type, handler) { handlers.downloadQaJson = handler; } },
+  "#qa-pack-status": { textContent: "Generate a card to enable both options." },
   "#feedback-link": { addEventListener(type, handler) { handlers.tallyFeedback = handler; } },
 };
 
@@ -120,6 +123,9 @@ elements["#card-count"].value = "20";
 context.generate();
 const batchTwenty = elements["#results"].children.length === 20;
 const batchActionsVisible = elements["#batch-actions"].hidden === false;
+const qaButtonsEnabled =
+  elements["#copy-qa-plan"].disabled === false &&
+  elements["#download-qa-json"].disabled === false;
 const firstRenderedCard = elements["#results"].children[0]?.innerHTML || "";
 const clickToCopyControlsRendered =
   firstRenderedCard.includes("copy-number") &&
@@ -164,6 +170,19 @@ context.navigator.clipboard.writeText = () => Promise.reject(new Error("Clipboar
 await context.copyText("fallback copy test");
 const fallbackCopyWorks = fallbackCommand === "copy";
 const sampleCards = [context.createCard("visa"), context.createCard("american-express")];
+const qaPack = context.createQaTestPack([sampleCards[0]]);
+const qaPackWorks =
+  qaPack.cases.length === 4 &&
+  luhn(qaPack.cases[0].input.card_number) &&
+  !luhn(qaPack.cases[1].input.card_number) &&
+  !validFutureDate(qaPack.cases[2].input.expiry) &&
+  qaPack.cases[3].input.cvv.length === sampleCards[0].cvv.length - 1;
+const qaMarkdown = context.qaPackToMarkdown(qaPack);
+const qaMarkdownWorks =
+  qaMarkdown.includes("# Payment Form QA Test Pack") &&
+  qaMarkdown.includes("TC-001") &&
+  qaMarkdown.includes("TC-004") &&
+  qaMarkdown.includes("AI assistant that can access your codebase or test environment");
 const jsonRecords = JSON.parse(context.cardsToJson(sampleCards));
 const jsonWorks = jsonRecords.length === 2 && Object.keys(jsonRecords[0]).join(",") === "brand,cardholder_name,card_number,cvv,expiry";
 const csv = context.cardsToCsv(sampleCards);
@@ -172,6 +191,15 @@ await handlers.copyJson();
 handlers.downloadCsv();
 const downloadedCsv = await downloadedFile.blob.text();
 const csvDownloadWorks = downloadedFile.download === "credit-card-test-data.csv" && downloadedCsv.startsWith("brand,cardholder_name,card_number,cvv,expiry\n");
+context.navigator.clipboard.writeText = (value) => { copiedNumber = value; return Promise.resolve(); };
+await handlers.copyQaPlan();
+const qaPlanCopyWorks = copiedNumber.includes("# Payment Form QA Test Pack") && elements["#copy-qa-plan"].textContent === "AI Test Plan copied";
+handlers.downloadQaJson();
+const downloadedQaJson = JSON.parse(await downloadedFile.blob.text());
+const qaJsonDownloadWorks =
+  downloadedFile.download === "payment-form-qa-test-pack.json" &&
+  downloadedQaJson.cases.length === 4 &&
+  downloadedQaJson.purpose === "client_side_payment_form_validation";
 let feedbackNavigationPrevented = false;
 handlers.tallyFeedback({ preventDefault() { feedbackNavigationPrevented = true; } });
 const tallyFeedbackWorks =
@@ -190,6 +218,7 @@ const results = {
   profiles: profileResults,
   batchTwenty,
   batchActionsVisible,
+  qaButtonsEnabled,
   clickToCopyControlsRendered,
   invalidInputs: invalidResults,
   copyWorks,
@@ -199,11 +228,16 @@ const results = {
   jsonWorks,
   csvWorks,
   csvDownloadWorks,
+  qaPackWorks,
+  qaMarkdownWorks,
+  qaPlanCopyWorks,
+  qaJsonDownloadWorks,
   tallyFeedbackWorks,
   trackingEventsWork,
   trackingPayloadIsSafe,
   generateHandlerRegistered: typeof handlers.click === "function",
   batchHandlersRegistered: typeof handlers.copyJson === "function" && typeof handlers.downloadCsv === "function",
+  qaHandlersRegistered: typeof handlers.copyQaPlan === "function" && typeof handlers.downloadQaJson === "function",
   feedbackHandlerRegistered: typeof handlers.tallyFeedback === "function",
 };
 

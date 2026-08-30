@@ -6,6 +6,9 @@ const feedback = document.querySelector("#feedback");
 const batchActions = document.querySelector("#batch-actions");
 const copyJsonButton = document.querySelector("#copy-json");
 const downloadCsvButton = document.querySelector("#download-csv");
+const copyQaPlanButton = document.querySelector("#copy-qa-plan");
+const downloadQaJsonButton = document.querySelector("#download-qa-json");
+const qaPackStatus = document.querySelector("#qa-pack-status");
 const tallyFeedbackLink = document.querySelector("#feedback-link");
 let currentCards = [];
 
@@ -151,6 +154,71 @@ function cardsToCsv(cards) {
   )].join("\n");
 }
 
+function createExpiredDate() {
+  const date = new Date();
+  date.setMonth(date.getMonth() - 1);
+  return `${String(date.getMonth() + 1).padStart(2, "0")}/${String(date.getFullYear()).slice(-2)}`;
+}
+
+function breakLuhn(number) {
+  const lastDigit = Number(number.slice(-1));
+  return `${number.slice(0, -1)}${(lastDigit + 1) % 10}`;
+}
+
+function createQaTestPack(cards) {
+  if (!cards.length) return null;
+  const card = cards[0];
+  const baseInput = {
+    card_type: card.brand,
+    cardholder_name: card.cardholderName,
+    card_number: card.number,
+    expiry: card.validDate,
+    cvv: card.cvv,
+  };
+  return {
+    version: 1,
+    purpose: "client_side_payment_form_validation",
+    generated_at: new Date().toISOString(),
+    source: "https://creditcardgenerator.online/",
+    scope_note: "Synthetic data for client-side formatting and validation tests only. Customize selectors and expected messages. Use the payment provider's official sandbox for transaction behavior.",
+    cases: [
+      {
+        id: "TC-001",
+        scenario: `Valid ${card.brand}`,
+        purpose: "Confirm that a structurally valid supported card record passes client-side format checks.",
+        input: { ...baseInput },
+        expected_result: [`${card.brand} is detected`, "No client-side card-format error is shown"],
+      },
+      {
+        id: "TC-002",
+        scenario: "Invalid Luhn checksum",
+        purpose: "Confirm that the form rejects a card number with an incorrect check digit.",
+        input: { ...baseInput, card_number: breakLuhn(card.number) },
+        expected_result: ["A card-number validation error is shown"],
+      },
+      {
+        id: "TC-003",
+        scenario: "Expired date",
+        purpose: "Confirm that the form rejects an expiry date in the past.",
+        input: { ...baseInput, expiry: createExpiredDate() },
+        expected_result: ["An expiry-date validation error is shown"],
+      },
+      {
+        id: "TC-004",
+        scenario: "Invalid security-code length",
+        purpose: "Confirm that the form rejects a CVV or CID with the wrong length.",
+        input: { ...baseInput, cvv: card.cvv.slice(0, -1) },
+        expected_result: ["A CVV or CID length error is shown"],
+      },
+    ],
+  };
+}
+
+function qaPackToMarkdown(pack) {
+  const cases = pack.cases.map((testCase) => `## ${testCase.id} — ${testCase.scenario}\n\nPurpose: ${testCase.purpose}\n\nInput:\n- Card type: ${testCase.input.card_type}\n- Cardholder name: ${testCase.input.cardholder_name}\n- Card number: ${testCase.input.card_number}\n- Expiry: ${testCase.input.expiry}\n- CVV/CID: ${testCase.input.cvv}\n\nExpected result:\n${testCase.expected_result.map((result) => `- ${result}`).join("\n")}`).join("\n\n");
+  return `# Payment Form QA Test Pack\n\nUse this pack with an AI assistant that can access your codebase or test environment, or follow it as a manual QA checklist. Map the field selectors and error messages to your own form, run only in a local, staging, or authorized test environment, and record the actual result for each case.\n\n${pack.scope_note}\n\n${cases}`;
+}
+
 function renderCards(cards) {
   results.replaceChildren();
   cards.forEach((card) => {
@@ -177,6 +245,9 @@ function generate() {
   currentCards = Array.from({ length: count }, () => createCard(cardType.value));
   renderCards(currentCards);
   batchActions.hidden = false;
+  copyQaPlanButton.disabled = false;
+  downloadQaJsonButton.disabled = false;
+  qaPackStatus.textContent = `Ready: four ${cardProfiles[cardType.value].label} validation scenarios.`;
   feedback.textContent = `${count} synthetic ${cardProfiles[cardType.value].label} ${count === 1 ? "card" : "cards"} generated.`;
   trackSiteEvent("generate_cards", { card_type: cardType.value, card_count: count });
 }
@@ -205,6 +276,34 @@ downloadCsvButton.addEventListener("click", () => {
   link.remove();
   URL.revokeObjectURL(url);
   trackSiteEvent("download_csv", { card_count: currentCards.length });
+});
+
+copyQaPlanButton.addEventListener("click", async () => {
+  const pack = createQaTestPack(currentCards);
+  if (!pack) return;
+  try {
+    await copyText(qaPackToMarkdown(pack));
+    copyQaPlanButton.textContent = "AI Test Plan copied";
+    qaPackStatus.textContent = "Paste the plan into an AI assistant that can access your project, or use it as a manual checklist.";
+    setTimeout(() => { copyQaPlanButton.textContent = "Copy AI Test Plan"; }, 1400);
+  } catch {
+    qaPackStatus.textContent = "Copy was unavailable. Try the JSON download instead.";
+  }
+});
+
+downloadQaJsonButton.addEventListener("click", () => {
+  const pack = createQaTestPack(currentCards);
+  if (!pack) return;
+  const blob = new Blob([JSON.stringify(pack, null, 2)], { type: "application/json;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "payment-form-qa-test-pack.json";
+  document.body.append(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+  qaPackStatus.textContent = "JSON pack downloaded. Adapt its cases to your test runner and form selectors.";
 });
 
 if (tallyFeedbackLink) {

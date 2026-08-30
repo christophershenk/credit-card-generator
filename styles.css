@@ -4,7 +4,8 @@ body { margin: 0; min-width: 320px; padding: 48px 24px 72px; }
 main { width: min(100%, 1120px); margin: 0 auto; }
 h1 { margin: 0 0 8px; font-size: clamp(2rem, 8vw, 3rem); letter-spacing: -0.04em; }
 .copy-hint { margin: 0 0 24px; color: #566174; font-size: .94rem; line-height: 1.5; }
-.generator, .card, .info article, .faq { background: #fff; border: 1px solid #e1e5ed; border-radius: 18px; box-shadow: 0 12px 35px rgba(25, 32, 44, 0.06); }
+.generator, .qa-pack, .card, .info article, .faq { background: #fff; border: 1px solid #e1e5ed; border-radius: 18px; box-shadow: 0 12px 35px rgba(25, 32, 44, 0.06); }
+.tool-layout { display: grid; grid-template-columns: minmax(0, 760px) minmax(280px, 1fr); gap: 18px; align-items: start; }
 .generator { width: min(100%, 760px); padding: clamp(22px, 5vw, 32px); }
 .controls { display: grid; grid-template-columns: minmax(0, 1fr) 160px; gap: 16px; }
 label { display: block; margin-bottom: 9px; color: #566174; font-size: .875rem; font-weight: 700; }
@@ -12,6 +13,7 @@ select, input { width: 100%; min-height: 46px; padding: 0 12px; border: 1px soli
 select:focus-visible, input:focus-visible, button:focus-visible { outline: 3px solid #9ca9ff; outline-offset: 3px; }
 button { min-height: 44px; padding: 0 16px; border: 1px solid #d6dce7; border-radius: 10px; background: #fff; color: #19202c; cursor: pointer; font: inherit; font-weight: 750; }
 button:hover { filter: brightness(.96); }
+button:disabled { cursor: not-allowed; opacity: .55; filter: none; }
 .generate { width: 100%; margin-top: 20px; border-color: #354bd3; background: #354bd3; color: #fff; }
 .feedback { min-height: 1.35rem; margin: 12px 0 0; color: #247043; font-size: .9rem; }
 .results { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-top: 12px; }
@@ -34,6 +36,17 @@ button:hover { filter: brightness(.96); }
 .card-details strong { display: block; margin-top: 3px; color: #27324a; font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: .9rem; }
 .batch-actions { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
 .batch-actions[hidden] { display: none; }
+.qa-pack { padding: 22px; box-shadow: none; }
+.qa-pack .eyebrow { margin: 0 0 6px; color: #354bd3; font-size: .72rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+.qa-pack h2 { margin: 0; font-size: 1.15rem; letter-spacing: -.02em; }
+.qa-intro { margin: 8px 0 16px; color: #566174; font-size: .88rem; line-height: 1.55; }
+.qa-options { display: grid; gap: 10px; }
+.qa-option { padding: 14px; border: 1px solid #e1e5ed; border-radius: 12px; background: #f8f9fc; }
+.qa-option h3 { margin: 0 0 5px; font-size: .92rem; }
+.qa-option p { margin: 0 0 12px; color: #657083; font-size: .78rem; line-height: 1.5; }
+.qa-option button { width: 100%; min-height: 40px; padding: 7px 10px; font-size: .8rem; }
+.qa-note { margin: 14px 0 0; color: #657083; font-size: .74rem; line-height: 1.5; }
+.qa-status { min-height: 1.2rem; margin: 10px 0 0; color: #247043; font-size: .76rem; line-height: 1.45; }
 .info { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-top: 34px; }
 .info article { padding: 22px; box-shadow: none; }
 .info h2 { margin: 0 0 10px; font-size: 1rem; letter-spacing: -.01em; }
@@ -61,5 +74,5 @@ button:hover { filter: brightness(.96); }
 .legal-card p { margin: 0 0 14px; }
 .legal-card ul { margin: 0 0 16px; padding-left: 22px; }
 .legal-card a { color: #354bd3; font-weight: 700; overflow-wrap: anywhere; }
-@media (max-width: 880px) { .results { grid-template-columns: 1fr; } }
+@media (max-width: 920px) { .tool-layout { grid-template-columns: 1fr; } .qa-pack { width: min(100%, 760px); } .results { grid-template-columns: 1fr; } }
 @media (max-width: 560px) { body { padding: 28px 16px 52px; } .controls, .info { grid-template-columns: 1fr; } .card { padding: 16px; } .number { font-size: clamp(1rem, 5vw, 1.3rem); } .copy-value { min-height: 44px; } .card-details { grid-template-columns: minmax(130px, 1fr) auto auto; gap: 10px; } .batch-actions > button { flex: 1 1 140px; } }
