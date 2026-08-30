@@ -230,7 +230,7 @@
 6. [x] 完成 GSC Domain property、Sitemap、实时抓取测试和首页索引请求。
 7. [x] 接入 GA4 基础访问和五个匿名产品行为事件，并更新 Privacy 页面。
 8. [x] 在 GSC URL Inspection 确认首页为 `URL is on Google`、`Page is indexed`。
-9. [ ] 第一渠道已选择 DEV Community，原创文章草稿与发布记录已准备；等待用户确认并登录后再公开发布和记录 URL。
+9. [ ] 第一渠道已选择 DEV Community；文章已保存为未发布草稿，预览和 AI 披露已检查，等待用户确认后再公开发布和记录 URL。
 
 GSC 的 Performance、Indexing 和 Experience 汇总仍显示正在处理，这是新站的等待型步骤，不阻塞第一轮外链冷启动。外部发布前必须检查渠道相关性、内容价值和平台规则，不批量提交目录或评论区。
 
