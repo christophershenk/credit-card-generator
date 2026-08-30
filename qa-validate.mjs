@@ -182,7 +182,7 @@ const qaMarkdownWorks =
   qaMarkdown.includes("# Payment Form QA Test Pack") &&
   qaMarkdown.includes("TC-001") &&
   qaMarkdown.includes("TC-004") &&
-  qaMarkdown.includes("AI assistant that can access your codebase or test environment");
+  qaMarkdown.includes("AI tool that can access your codebase or test environment");
 const jsonRecords = JSON.parse(context.cardsToJson(sampleCards));
 const jsonWorks = jsonRecords.length === 2 && Object.keys(jsonRecords[0]).join(",") === "brand,cardholder_name,card_number,cvv,expiry";
 const csv = context.cardsToCsv(sampleCards);

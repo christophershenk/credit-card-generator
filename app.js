@@ -216,7 +216,7 @@ function createQaTestPack(cards) {
 
 function qaPackToMarkdown(pack) {
   const cases = pack.cases.map((testCase) => `## ${testCase.id} — ${testCase.scenario}\n\nPurpose: ${testCase.purpose}\n\nInput:\n- Card type: ${testCase.input.card_type}\n- Cardholder name: ${testCase.input.cardholder_name}\n- Card number: ${testCase.input.card_number}\n- Expiry: ${testCase.input.expiry}\n- CVV/CID: ${testCase.input.cvv}\n\nExpected result:\n${testCase.expected_result.map((result) => `- ${result}`).join("\n")}`).join("\n\n");
-  return `# Payment Form QA Test Pack\n\nUse this pack with an AI assistant that can access your codebase or test environment, or follow it as a manual QA checklist. Map the field selectors and error messages to your own form, run only in a local, staging, or authorized test environment, and record the actual result for each case.\n\n${pack.scope_note}\n\n${cases}`;
+  return `# Payment Form QA Test Pack\n\nUse this pack with an AI tool that can access your codebase or test environment, or follow it as a manual QA checklist. Map the field selectors and error messages to your own form, run only in a local, staging, or authorized test environment, and record the actual result for each case.\n\n${pack.scope_note}\n\n${cases}`;
 }
 
 function renderCards(cards) {
@@ -284,7 +284,7 @@ copyQaPlanButton.addEventListener("click", async () => {
   try {
     await copyText(qaPackToMarkdown(pack));
     copyQaPlanButton.textContent = "AI Test Plan copied";
-    qaPackStatus.textContent = "Paste the plan into an AI assistant that can access your project, or use it as a manual checklist.";
+    qaPackStatus.textContent = "Paste the plan into an AI tool that can access your project, or use it as a manual checklist.";
     setTimeout(() => { copyQaPlanButton.textContent = "Copy AI Test Plan"; }, 1400);
   } catch {
     qaPackStatus.textContent = "Copy was unavailable. Try the JSON download instead.";
