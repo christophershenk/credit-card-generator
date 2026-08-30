@@ -127,16 +127,18 @@
 1. [x] 创建 GA4 媒体资源 `Credit Card Generator` 和 Web data stream。
 2. [x] Web data stream 使用 `https://creditcardgenerator.online/`。
 3. [x] 将 Measurement ID `G-D59QC6ZC3D` 的 Google tag 加入首页和 Privacy 页面并部署。
-4. [ ] 在 Realtime 验证真实访问出现；Codex 的受控浏览器会拦截分析请求，因此需要使用未拦截 Google Analytics 的普通浏览器或手机访问一次。
+4. [x] 用户在 Realtime 看到过去 30 分钟活跃用户数为 1，基础访问已成功进入 GA4。
 5. [x] Privacy 页面已更新；基础配置只记录页面访问等匿名测量，不发送生成的卡号、CVV、姓名或其他生成结果。
 
-### 候选匿名事件
+### 已部署的匿名事件
 
-- `generate_cards`
-- `copy_number`
-- `copy_json`
-- `download_csv`
-- `open_feedback`
+- [x] `generate_cards`：只发送卡型和数量。
+- [x] `copy_number`：只发送卡型。
+- [x] `copy_json`：只发送当前批次数量。
+- [x] `download_csv`：只发送当前批次数量。
+- [x] `open_feedback`：不发送表单内容。
+
+自动检查已确认这些事件不包含卡号、CVV、姓名、有效期或其他生成结果。
 
 **完成条件**：Realtime 能看到访问；事件名称和数据字段经过检查，不包含生成结果或个人信息。
 
@@ -214,9 +216,9 @@
 
 ## 当前停止点
 
-**当前阶段：阶段 4 已完成，准备决定是否接入网站分析。**
+**当前阶段：阶段 5 已完成；首页已被 Google 正式收录，阶段 6 的查询与流量数据仍在处理中。**
 
-**下一步唯一优先事项：决定使用 GA4、Cloudflare Web Analytics，还是暂缓分析脚本。**
+**下一步唯一优先事项：准备并执行第一轮高质量外链与真实曝光冷启动。**
 
 具体顺序：
 
@@ -226,9 +228,11 @@
 4. [x] 检查 `pages.dev` 与正式域名：canonical 已统一到正式域名。
 5. [x] 部署并逐项验证线上 URL。
 6. [x] 完成 GSC Domain property、Sitemap、实时抓取测试和首页索引请求。
-7. [ ] 根据用户选择接入匿名网站分析，或记录暂缓决定。
+7. [x] 接入 GA4 基础访问和五个匿名产品行为事件，并更新 Privacy 页面。
+8. [x] 在 GSC URL Inspection 确认首页为 `URL is on Google`、`Page is indexed`。
+9. [ ] 选择第一个相关渠道，准备内容并在用户确认后发布，同时记录 URL、日期和结果。
 
-如果接入分析，必须先确认工具、隐私影响和数据范围，再更新 Privacy 页面并部署；分析基线建立后才开始外链冷启动。
+GSC 的 Performance、Indexing 和 Experience 汇总仍显示正在处理，这是新站的等待型步骤，不阻塞第一轮外链冷启动。外部发布前必须检查渠道相关性、内容价值和平台规则，不批量提交目录或评论区。
 
 ## Walkthrough 协作规则
 
