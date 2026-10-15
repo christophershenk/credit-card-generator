@@ -9,6 +9,8 @@ const downloadCsvButton = document.querySelector("#download-csv");
 const copyQaPlanButton = document.querySelector("#copy-qa-plan");
 const downloadQaJsonButton = document.querySelector("#download-qa-json");
 const qaPackStatus = document.querySelector("#qa-pack-status");
+const qaPreview = document.querySelector("#qa-preview");
+const qaCases = document.querySelector("#qa-cases");
 const tallyFeedbackLink = document.querySelector("#feedback-link");
 let currentCards = [];
 
@@ -214,6 +216,30 @@ function createQaTestPack(cards) {
   };
 }
 
+function renderQaPreview(pack) {
+  const changes = [
+    `Luhn-valid number; ${pack.cases[0].input.cvv.length}-digit security code`,
+    "Last card-number digit changed",
+    `Expiry changed to ${pack.cases[2].input.expiry}`,
+    `Security code shortened to ${pack.cases[3].input.cvv.length} digits`,
+  ];
+  qaCases.replaceChildren();
+  pack.cases.forEach((testCase, index) => {
+    const row = document.createElement("tr");
+    const inputCell = document.createElement("td");
+    const name = document.createElement("strong");
+    name.textContent = testCase.scenario;
+    const change = document.createElement("span");
+    change.textContent = changes[index];
+    inputCell.append(name, change);
+    const expected = document.createElement("td");
+    expected.textContent = testCase.expected_result.join("; ");
+    row.append(inputCell, expected);
+    qaCases.append(row);
+  });
+  qaPreview.hidden = false;
+}
+
 function qaPackToMarkdown(pack) {
   const cases = pack.cases.map((testCase) => `## ${testCase.id} — ${testCase.scenario}\n\nPurpose: ${testCase.purpose}\n\nInput:\n- Card type: ${testCase.input.card_type}\n- Cardholder name: ${testCase.input.cardholder_name}\n- Card number: ${testCase.input.card_number}\n- Expiry: ${testCase.input.expiry}\n- CVV/CID: ${testCase.input.cvv}\n\nExpected result:\n${testCase.expected_result.map((result) => `- ${result}`).join("\n")}`).join("\n\n");
   return `# Payment Form QA Test Pack\n\nUse this pack with an AI tool that can access your codebase or test environment, or follow it as a manual QA checklist. Map the field selectors and error messages to your own form, run only in a local, staging, or authorized test environment, and record the actual result for each case.\n\n${pack.scope_note}\n\n${cases}`;
@@ -244,6 +270,7 @@ function generate() {
   }
   currentCards = Array.from({ length: count }, () => createCard(cardType.value));
   renderCards(currentCards);
+  renderQaPreview(createQaTestPack(currentCards));
   batchActions.hidden = false;
   copyQaPlanButton.disabled = false;
   downloadQaJsonButton.disabled = false;
@@ -284,6 +311,7 @@ copyQaPlanButton.addEventListener("click", async () => {
   try {
     await copyText(qaPackToMarkdown(pack));
     copyQaPlanButton.textContent = "Test plan copied";
+    trackSiteEvent("copy_qa_plan");
     qaPackStatus.textContent = "Paste the plan into an AI tool that can access your project, or use it as a manual checklist.";
     setTimeout(() => { copyQaPlanButton.textContent = "Copy Test Plan"; }, 1400);
   } catch {
@@ -303,6 +331,7 @@ downloadQaJsonButton.addEventListener("click", () => {
   link.click();
   link.remove();
   URL.revokeObjectURL(url);
+  trackSiteEvent("download_qa_json");
   qaPackStatus.textContent = "JSON pack downloaded. Adapt its cases to your test runner and form selectors.";
 });
 

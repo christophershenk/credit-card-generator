@@ -77,3 +77,12 @@ button:disabled { cursor: not-allowed; opacity: .55; filter: none; }
 .legal-card a { color: #354bd3; font-weight: 700; overflow-wrap: anywhere; }
 @media (max-width: 920px) { .tool-layout { grid-template-columns: 1fr; } .generator-stack { display: contents; } .generator { order: 1; } .qa-pack { order: 2; width: 100%; } .batch-actions { order: 3; } .results { order: 4; grid-template-columns: 1fr; } }
 @media (max-width: 560px) { body { padding: 28px 16px 52px; } .controls, .info { grid-template-columns: 1fr; } .card { padding: 16px; } .number { font-size: clamp(1rem, 5vw, 1.3rem); } .copy-value { min-height: 44px; } .card-details { grid-template-columns: minmax(130px, 1fr) auto auto; gap: 10px; } .batch-actions > button { flex: 1 1 140px; } }
+
+.qa-preview { margin:18px 0; }
+.qa-preview h3 { margin:0 0 10px; font-size:.95rem; }
+.qa-preview table { width:100%; border-collapse:collapse; table-layout:fixed; font-size:.75rem; line-height:1.5; }
+.qa-preview caption { caption-side:bottom; padding-top:8px; color:#657083; text-align:left; font-size:.72rem; }
+.qa-preview th, .qa-preview td { padding:10px 7px; text-align:left; vertical-align:top; border-bottom:1px solid #e1e5ed; overflow-wrap:break-word; }
+.qa-preview th { background:#f5f7fb; color:#566174; font-weight:700; }
+.qa-preview td strong, .qa-preview td span { display:block; }
+.qa-preview td span { margin-top:4px; color:#657083; }
