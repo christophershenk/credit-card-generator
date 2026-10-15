@@ -17,6 +17,8 @@ const elements = {
   "#download-csv": { addEventListener(type, handler) { handlers.downloadCsv = handler; } },
   "#copy-qa-plan": { textContent: "Copy Test Plan", disabled: true, addEventListener(type, handler) { handlers.copyQaPlan = handler; } },
   "#download-qa-json": { disabled: true, addEventListener(type, handler) { handlers.downloadQaJson = handler; } },
+  "#qa-preview": { hidden: true },
+  "#qa-cases": { children: [], replaceChildren() { this.children = []; }, append(row) { this.children.push(row); } },
   "#qa-pack-status": { textContent: "Generate a card to enable both options." },
   "#feedback-link": { addEventListener(type, handler) { handlers.tallyFeedback = handler; } },
 };
@@ -206,7 +208,7 @@ const tallyFeedbackWorks =
   feedbackNavigationPrevented &&
   openedTallyForm.formId === "44Vd1o" &&
   openedTallyForm.options.layout === "modal";
-const expectedTrackingEvents = ["generate_cards", "copy_number", "copy_json", "download_csv", "open_feedback"];
+const expectedTrackingEvents = ["generate_cards", "copy_number", "copy_json", "download_csv", "copy_qa_plan", "download_qa_json", "open_feedback"];
 const trackingEventNames = trackingEvents.map(([, eventName]) => eventName);
 const trackingEventsWork = expectedTrackingEvents.every((eventName) => trackingEventNames.includes(eventName));
 const trackingPayloadIsSafe = trackingEvents.every(([, , parameters = {}]) =>
@@ -219,6 +221,8 @@ const results = {
   batchTwenty,
   batchActionsVisible,
   qaButtonsEnabled,
+  qaPreviewVisible: elements["#qa-preview"].hidden === false,
+  qaPreviewHasFourCases: elements["#qa-cases"].children.length === 4,
   clickToCopyControlsRendered,
   invalidInputs: invalidResults,
   copyWorks,

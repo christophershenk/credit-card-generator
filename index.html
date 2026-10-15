@@ -19,7 +19,7 @@
       content="Generate up to 20 random, Luhn-valid card records with CVV and expiry, then copy or export them."
     />
     <title>Random Credit Card Generator – Visa, Mastercard &amp; More</title>
-    <link rel="stylesheet" href="styles.css?v=6" />
+    <link rel="stylesheet" href="styles.css?v=7" />
     <script src="site-metrics.js?v=2"></script>
   </head>
   <body data-deployment-check="2026-08-28">
@@ -62,6 +62,14 @@
           <p class="eyebrow">For QA &amp; developers</p>
           <h2 id="qa-pack-title">Generate Test Cases</h2>
           <p class="qa-intro">Create four payment-form test cases from one generated card: a valid card, an invalid card number, an expired date, and an invalid CVV.</p>
+          <section class="qa-preview" id="qa-preview" aria-labelledby="qa-preview-title" hidden>
+            <h3 id="qa-preview-title">Your four test cases</h3>
+            <table>
+              <caption>Based on the first generated card. Expected outcomes depend on your form's validation rules.</caption>
+              <thead><tr><th scope="col">Case &amp; input change</th><th scope="col">Expected outcome</th></tr></thead>
+              <tbody id="qa-cases"></tbody>
+            </table>
+          </section>
           <div class="qa-options">
             <section class="qa-option">
               <h3>Use with AI</h3>
@@ -123,6 +131,6 @@
       </footer>
     </main>
     <script async src="https://tally.so/widgets/embed.js"></script>
-    <script src="app.js?v=6"></script>
+    <script src="app.js?v=7"></script>
   </body>
 </html>
